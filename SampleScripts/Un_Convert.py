@@ -1,8 +1,6 @@
 def script(text, case='convert', database_directory=''):
     import openpyxl
     
-    if database_directory == '': database_directory = 'SampleScripts/Un-Converting_Database.xlsx'
-    
     wd = openpyxl.load_workbook(database_directory)
     database = wd.get_sheet_by_name("Database")
     

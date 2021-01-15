@@ -1,6 +1,6 @@
 #استيراد المكتبات
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QCheckBox, QPushButton, QLabel, QMenuBar, QAction, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QCheckBox, QPushButton, QLabel, QMenuBar, QAction, QFileDialog, QMessageBox
 from sys import argv, exit
 from os import path, listdir
 
@@ -147,11 +147,11 @@ open_database_button.setGeometry(QtCore.QRect(330, 130, 93, 41))
 open_database_button.setText("فتح قاعدة\nبيانات")
 
 import_folder = QPushButton(EnteringWindow)
-import_folder.setGeometry(QtCore.QRect(20, 530, 93, 41))
+import_folder.setGeometry(QtCore.QRect(130, 200, 93, 41))
 import_folder.setText("المجلد الحاوي\nللملفات")
 export_folder = QPushButton(EnteringWindow)
-export_folder.setGeometry(QtCore.QRect(330, 130, 93, 41))
-export_folder.setText("فتح قاعدة\nبيانات")
+export_folder.setGeometry(QtCore.QRect(20, 200, 93, 41))
+export_folder.setText("مجلد\nالاستخراج")
 
 label = QLabel(EnteringWindow)
 label.setGeometry(QtCore.QRect(654, 10, 81, 20))
@@ -163,7 +163,7 @@ label_2.setFont(labels_font)
 label_2.setText("الترجمة:")
 
 database_check = QCheckBox("استخدام قاعدة البيانات", EnteringWindow)
-database_check.setGeometry(QtCore.QRect(570, 190, 150, 16))
+database_check.setGeometry(QtCore.QRect(570, 200, 150, 16))
 database_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 
 
@@ -171,25 +171,33 @@ database_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 #[Delete Duplicated lines, Sort short to long, Sort long to short, Reshape Arabic, Unshape Arabic, Convert, Unconvert,
 # Reverse whole text, Reverse Arabic only]
 converting_options_list = [False, False, False, False, False, False, False, False, False]
-database_directory = ''
+database_directory = 'SampleScripts/Un-Converting_Database.xlsx'
 
 #الدوال
+def being_ready_to_start():
+    ##إلغاء العملية في حال تحقق إحدى هذه الشروط
+    if text == '': return
+    if converting_options_list[5] or converting_options_list[6]:
+        if not path.exists(database_directory):
+            QMessageBox.about(MainWindow, "!!خطأ", "قاعدة بيانات التحويل غير موجودة،\nتم إيقاف كل العمليات.")
+            return
+
 def check_options(check_box, cell):
     converting_options_list[cell] = check_box.isChecked()
 
 def open_textfile():
-    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'Single File', '' , '*')
+    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'ملف نص', '' , '*')
     if path.exists(fileName):
         entered_text.setPlainText(open(fileName, 'r', encoding='utf-8').read())
 
 def open_convert_database():
-    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'Single File', '' , '*.xlsx')
+    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'قاعدة بيانات', '' , '*.xlsx')
     if path.exists(fileName):
+        global database_directory
         database_directory = fileName
 
 def convert(text):
-    ##الإلغاء في حال تحقق إحدى هذه الشروط
-    if text == '': return
+    being_ready_to_start()
     
     if converting_options_list[0]:#Delete Duplicated lines
         from SampleScripts.Delete_Duplicated_lines import script
@@ -228,6 +236,10 @@ def convert(text):
         text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText(), 'Arabic')
     
     return text
+
+def enter():
+    being_ready_to_start()
+    
 
 ##توصيل الإشارات
 convert_button.clicked.connect(lambda: result_text.setPlainText(convert(entered_text.toPlainText())))
