@@ -36,7 +36,7 @@ def reverse_arabic(text):
     if word != '': text = text.replace(word, word[::-1])
     return text
 
-def script(text, start_command, end_command, case='whole text'):
+def reverse_script(text, start_command, end_command, case='whole text'):
     for bow in bows_list:
         if bow[0] not in (start_command + end_command) or bow[1] not in (start_command + end_command):
             text = swap(text, bow[0], bow[1])
@@ -60,3 +60,17 @@ def script(text, start_command, end_command, case='whole text'):
                 text_list[_] = swap_edges_spaces(text_list[_])
         text = ''.join(text_list)
         return text
+
+def script(text, start_command, end_command, case='whole text', new_page_command='', new_line_command='\n'):
+    if new_page_command != '': text_pages_list = text.split(new_page_command)
+    else: text_pages_list = [text]
+    text_pages_lines_list = [page.split(new_line_command) for page in text_pages_list]
+    reversed_text = ''
+    
+    for page in range(len(text_pages_lines_list)):
+        for line in range(len(text_pages_lines_list[page])):
+            reversed_text += reverse_script(text_pages_lines_list[page][line], start_command, end_command, case='whole text')
+            if len(text_pages_lines_list[page])-1 > line: reversed_text += new_line_command 
+        if len(text_pages_lines_list)-1 > page : reversed_text += new_page_command 
+    
+    return reversed_text

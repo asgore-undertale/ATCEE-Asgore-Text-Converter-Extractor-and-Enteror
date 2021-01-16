@@ -25,7 +25,7 @@ about_textbox.setText("طوّرت هذه الأداة من قبل Asgore_Underta
 
 
 #نافذة خيارات التحويل
-OptionsWindow_Width = 400
+OptionsWindow_Width = 440
 checkbox_size = [OptionsWindow_Width-5, 16]
 textedit_size = [30, 26]
 def pos_y(line_num, Height = checkbox_size[1], Between_every_y = 20):
@@ -33,7 +33,7 @@ def pos_y(line_num, Height = checkbox_size[1], Between_every_y = 20):
     return y
 
 OptionsWindow = QMainWindow()
-OptionsWindow.setFixedSize(OptionsWindow_Width, 344)
+OptionsWindow.setFixedSize(OptionsWindow_Width, 330)
 OptionsWindow.setWindowTitle("خيارات التحويل")
 
 DDL_check = QCheckBox("حذف الأسطر المكررة", OptionsWindow)
@@ -59,31 +59,44 @@ UA_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 C_check = QCheckBox("تحويل النص", OptionsWindow)
 C_check.setGeometry(QtCore.QRect(0, pos_y(5), checkbox_size[0], checkbox_size[1]))
 C_check.setLayoutDirection(QtCore.Qt.RightToLeft)
-
 UC_check = QCheckBox("إلغاء تحويل النص", OptionsWindow)
 UC_check.setGeometry(QtCore.QRect(0, pos_y(6), checkbox_size[0], checkbox_size[1]))
 UC_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+##
 UC_database_button = QPushButton(OptionsWindow)
-UC_database_button.setGeometry(QtCore.QRect(5, 190, 93, 56))
+UC_database_button.setGeometry(QtCore.QRect(25, 190, 93, 56))
 UC_database_button.setText("قاعدة بيانات")
+##
 
 RT_check = QCheckBox("عكس النص", OptionsWindow)
 RT_check.setGeometry(QtCore.QRect(0, pos_y(7), checkbox_size[0], checkbox_size[1]))
 RT_check.setLayoutDirection(QtCore.Qt.RightToLeft)
-RT_end_command = QTextEdit(OptionsWindow)
-RT_end_command.setGeometry(QtCore.QRect(5, 275, 30, 26))
-RT_end_label = QLabel(OptionsWindow)
-RT_end_label.setGeometry(QtCore.QRect(40, 275, 30, 26))
-RT_end_label.setText("بعدها:")
-RT_start_command = QTextEdit(OptionsWindow)
-RT_start_command.setGeometry(QtCore.QRect(75, 275, 30, 26))
-RT_start_label = QLabel(OptionsWindow)
-RT_start_label.setGeometry(QtCore.QRect(110, 275, 60, 26))
-RT_start_label.setText("قبل الأوامر:")
-
 RAO_check = QCheckBox("عكس العربية في النص", OptionsWindow)
 RAO_check.setGeometry(QtCore.QRect(0, pos_y(8), checkbox_size[0], checkbox_size[1]))
 RAO_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+##
+RT_end_command = QTextEdit(OptionsWindow)
+RT_end_command.setGeometry(QtCore.QRect(5, 262, 30, 26))
+RT_end_label = QLabel(OptionsWindow)
+RT_end_label.setGeometry(QtCore.QRect(40, 262, 35, 26))
+RT_end_label.setText("بعدها:")
+RT_start_command = QTextEdit(OptionsWindow)
+RT_start_command.setGeometry(QtCore.QRect(110, 262, 30, 26))
+RT_start_label = QLabel(OptionsWindow)
+RT_start_label.setGeometry(QtCore.QRect(145, 262, 60, 26))
+RT_start_label.setText("قبل الأوامر:")
+
+RT_end_command = QTextEdit(OptionsWindow)
+RT_end_command.setGeometry(QtCore.QRect(5, 295, 30, 26))
+RT_end_label = QLabel(OptionsWindow)
+RT_end_label.setGeometry(QtCore.QRect(40, 295, 65, 26))
+RT_end_label.setText("سطر جديد:")
+RT_start_command = QTextEdit(OptionsWindow)
+RT_start_command.setGeometry(QtCore.QRect(110, 295, 30, 26))
+RT_start_label = QLabel(OptionsWindow)
+RT_start_label.setGeometry(QtCore.QRect(145, 295, 95, 26))
+RT_start_label.setText("أمر صفحة جديدة:")
+##
 
 
 #النافذة الرئيسية
