@@ -44,7 +44,7 @@ def reverse_script(text, start_command, end_command, case='whole text'):
         if case == 'whole text':
             text = text[::-1]
         else:
-            text = test(text)
+            text = reverse_arabic(text)
         return text
     else:
         text = text.replace(start_command, end_command)
@@ -61,15 +61,19 @@ def reverse_script(text, start_command, end_command, case='whole text'):
         text = ''.join(text_list)
         return text
 
-def script(text, start_command, end_command, case='whole text', new_page_command='', new_line_command='\n'):
+def script(text, start_command, end_command, new_page_command='', new_line_command='\n', case='whole text'):
+    text = text.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+    
     if new_page_command != '': text_pages_list = text.split(new_page_command)
     else: text_pages_list = [text]
-    text_pages_lines_list = [page.split(new_line_command) for page in text_pages_list]
+    if new_line_command != '':  text_pages_lines_list = [page.split(new_line_command) for page in text_pages_list]
+    else: text_pages_lines_list = [text_pages_list]
+   
     reversed_text = ''
     
     for page in range(len(text_pages_lines_list)):
         for line in range(len(text_pages_lines_list[page])):
-            reversed_text += reverse_script(text_pages_lines_list[page][line], start_command, end_command, case='whole text')
+            reversed_text += reverse_script(text_pages_lines_list[page][line], start_command, end_command, case)
             if len(text_pages_lines_list[page])-1 > line: reversed_text += new_line_command 
         if len(text_pages_lines_list)-1 > page : reversed_text += new_page_command 
     

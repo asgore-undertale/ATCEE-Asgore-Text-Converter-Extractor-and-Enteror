@@ -1,12 +1,14 @@
 #استيراد المكتبات
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QCheckBox, QPushButton, QLabel, QMenuBar, QAction, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QCheckBox, QPushButton, QLabel, QMenuBar, QAction, QFileDialog, QMessageBox, QRadioButton
 from sys import argv, exit
 from os import path, listdir
 import openpyxl
 
 ##
 app = QApplication(argv)
+
+##الخطوط
 labels_font = QtGui.QFont()
 labels_font.setPointSize(9)
 textbox_font = QtGui.QFont()
@@ -65,7 +67,7 @@ UC_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 ##
 UC_database_button = QPushButton(OptionsWindow)
 UC_database_button.setGeometry(QtCore.QRect(25, 190, 93, 56))
-UC_database_button.setText("قاعدة بيانات")
+UC_database_button.setText("قاعدة بيانات\nالتحويل")
 ##
 
 RT_check = QCheckBox("عكس النص", OptionsWindow)
@@ -86,16 +88,16 @@ RT_start_label = QLabel(OptionsWindow)
 RT_start_label.setGeometry(QtCore.QRect(145, 262, 60, 26))
 RT_start_label.setText("قبل الأوامر:")
 
-RT_end_command = QTextEdit(OptionsWindow)
-RT_end_command.setGeometry(QtCore.QRect(5, 295, 30, 26))
-RT_end_label = QLabel(OptionsWindow)
-RT_end_label.setGeometry(QtCore.QRect(40, 295, 65, 26))
-RT_end_label.setText("سطر جديد:")
-RT_start_command = QTextEdit(OptionsWindow)
-RT_start_command.setGeometry(QtCore.QRect(110, 295, 30, 26))
-RT_start_label = QLabel(OptionsWindow)
-RT_start_label.setGeometry(QtCore.QRect(145, 295, 95, 26))
-RT_start_label.setText("أمر صفحة جديدة:")
+RT_line_command = QTextEdit(OptionsWindow)
+RT_line_command.setGeometry(QtCore.QRect(5, 295, 30, 26))
+RT_line_label = QLabel(OptionsWindow)
+RT_line_label.setGeometry(QtCore.QRect(40, 295, 65, 26))
+RT_line_label.setText("سطر جديد:")
+RT_page_command = QTextEdit(OptionsWindow)
+RT_page_command.setGeometry(QtCore.QRect(110, 295, 30, 26))
+RT_page_label = QLabel(OptionsWindow)
+RT_page_label.setGeometry(QtCore.QRect(145, 295, 95, 26))
+RT_page_label.setText("أمر صفحة جديدة:")
 ##
 
 
@@ -140,7 +142,7 @@ menubar.addAction(about)
 
 #نافذة الإدخال
 EnteringWindow = QMainWindow()
-EnteringWindow.setFixedSize(756, 260)
+EnteringWindow.setFixedSize(756, 290)
 EnteringWindow.setWindowTitle("نافذة الإدخال")
 
 translate_text = QTextEdit(EnteringWindow)
@@ -158,7 +160,7 @@ convert_enter_button.setGeometry(QtCore.QRect(330, 80, 93, 41))
 convert_enter_button.setText("تحويل\nوإدخال")
 text_database_button = QPushButton(EnteringWindow)
 text_database_button.setGeometry(QtCore.QRect(330, 130, 93, 41))
-text_database_button.setText("فتح قاعدة\nبيانات")
+text_database_button.setText("فتح قاعدة\nبيانات النصوص")
 
 input_from_folder = QPushButton(EnteringWindow)
 input_from_folder.setGeometry(QtCore.QRect(130, 200, 93, 41))
@@ -177,17 +179,34 @@ label_2.setFont(labels_font)
 label_2.setText("الترجمة:")
 
 database_check = QCheckBox("استخدام قاعدة البيانات", EnteringWindow)
-database_check.setGeometry(QtCore.QRect(570, 200, 150, 16))
+database_check.setGeometry(QtCore.QRect(570, 190, 150, 16))
 database_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+too_long_check = QCheckBox("عدم إدخال ترجمات أطول من النص الأصلي (بقيم الهيكس)", EnteringWindow)
+too_long_check.setGeometry(QtCore.QRect(270, 215,450, 16))
+too_long_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+translation_place_check = QCheckBox(":مكان الترجمة في حال كانت أقصر", EnteringWindow)
+translation_place_check.setGeometry(QtCore.QRect(270, 240,450, 16))
+translation_place_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+
+#if selected:
+first_radio = QRadioButton(EnteringWindow)
+first_radio.setGeometry(QtCore.QRect(220, 265,450, 16))
+first_radio.setText("أول")
+first_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
+middle_radio = QRadioButton(EnteringWindow)
+middle_radio.setGeometry(QtCore.QRect(150, 265,450, 16))
+middle_radio.setText("وسط")
+middle_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
+last_radio = QRadioButton(EnteringWindow)
+last_radio.setGeometry(QtCore.QRect(80, 265,450, 16))
+last_radio.setText("آخر")
+last_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
 
 
 ##المتغيرات
-#[Delete Duplicated lines, Sort short to long, Sort long to short, Reshape Arabic, Unshape Arabic, Convert, Unconvert,
-# Reverse whole text, Reverse Arabic only]
-converting_database_directory = 'SampleScripts/Un-Converting_Database.xlsx'
+converting_database_directory = 'Scripts/Un-Converting_Database.xlsx'
 text_database_directory = 'جدول النصوص.xlsx'
-input_folder = 'المجلد الحاوي للملفات/'
-output_folder = 'مجلد الاستخراج/'
+input_folder, output_folder = 'المجلد الحاوي للملفات/', 'مجلد الاستخراج/'
 
 #الدوال
 
@@ -195,18 +214,20 @@ def open_textfile():
     fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'ملف نص', '' , '*')
     if path.exists(fileName):
         entered_text.setPlainText(open(fileName, 'r', encoding='utf-8').read())
+    QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار ملف النص.")
 
 def open_convert_database():
-    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
+    fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
     if path.exists(fileName):
         global converting_database_directory
         converting_database_directory = fileName
+    QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_text_database():
-    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'قاعدة بيانات النص', '' , '*.xlsx')
+    fileName, _ = QFileDialog.getOpenFileName(EnteringWindow, 'قاعدة بيانات النص', '' , '*.xlsx')
     if path.exists(fileName):
         global text_database_directory
-        text_database_directory = fileName
+    QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_folder(case='input'):
     folder = str(QFileDialog.getExistingDirectory(EnteringWindow, "Select Directory"))+'/'
@@ -217,6 +238,7 @@ def open_folder(case='input'):
         else:
             global output_folder
             output_folder = folder
+    QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
 
 def convert(text):
     ##إلغاء العملية في حال تحقق إحدى هذه الشروط
@@ -256,17 +278,22 @@ def convert(text):
         
     if RT_check.isChecked():#Reverse whole text
         from Scripts.Reverse_text import script
-        text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText())
+        text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText(), RT_page_command.toPlainText(), RT_line_command.toPlainText())
         
     if RAO_check.isChecked():#‫Reverse Arabic only
         from Scripts.Reverse_text import script
-        text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText(), 'Arabic')
+        text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText(), RT_page_command.toPlainText(), RT_line_command.toPlainText(), 'Arabic')
     
     return text
 
 def enter(convert_bool=True):
     ##المتغيرات
-    text_dictionary = {}
+    text_dic = {}
+    too_long_dic = {}
+    no_found_list = []
+    found_list = []
+    no_found_log = ''
+    too_long_log = ''
     
     ##إلغاء العملية في حال تحقق إحدى هذه الشروط
     if C_check.isChecked() or UC_check.isChecked():
@@ -293,24 +320,72 @@ def enter(convert_bool=True):
             original_cell_value = text_table['A'+str(cell)].value
             translate_cell_value = text_table['B'+str(cell)].value
             
-            if original_cell_value in text_dictionary:
-                if text_dictionary[original_cell_value] != '' or text_dictionary[original_cell_value] != None:
-                    text_dictionary[original_cell_value] = translate_cell_value
+            if original_cell_value in text_dic:
+                if text_dic[original_cell_value] == '' or text_dic[original_cell_value] == None:
+                    text_dic[original_cell_value] = translate_cell_value
             else:
-                text_dictionary[original_cell_value] = translate_cell_value
+                text_dic[original_cell_value] = translate_cell_value
+        
+        new_d = {}
+        for k in sorted(text_dic, key=len, reverse=True):
+            new_d[k] = text_dic[k]
+        text_dic = new_d
     else:
         if original_text.toPlainText() == '': return
-        text_dictionary[original_text.toPlainText()] = translate_text.toPlainText()
-    ##########
+        text_dic[original_text.toPlainText()] = translate_text.toPlainText()
     
     for filename in files_list:
-        file_content = open(input_folder+filename, 'r', encoding='utf-8').read()
+        file_content = open(input_folder+filename, 'rb').read()
         
-        for text, translation in text_dictionary.items():
-            if convert_bool: translation = convert(translation)
-            file_content = file_content.replace(text, translation)
+        for text, translation in text_dic.items():
+            if translation_place_check.isChecked() and len(translation.encode('utf-8').hex()) < len(text.encode('utf-8').hex()):
+                spaces_count = (len(text.encode('utf-8').hex()) // 2) - (len(translation.encode('utf-8').hex()) // 2)
+                if first_radio.isChecked():#first
+                    for i in range(spaces_count):
+                        translation += ' '
+                elif middle_radio.isChecked():#middle
+                    for i in range(spaces_count):
+                        if i % 2 == 0:
+                            translation += ' '
+                        else:
+                            translation = ' ' + translation
+                elif last_radio.isChecked():#last
+                    for i in range(spaces_count):
+                        translation = ' ' + translation
+            
+            if bytes(text, 'utf-8') in file_content:
+                if convert_bool: translation = convert(translation)
+                if too_long_check.isChecked() and len(translation.encode('utf-8').hex()) > len(text.encode('utf-8').hex()):
+                    too_long_dic[text] = translation
+                else:
+                    file_content = file_content.replace(bytes(text, 'utf-8'), bytes(translation, 'utf-8'))
+                    found_list.append(text)
+                    if text in no_found_list: no_found_list.remove(text)
+            else:
+                if text not in no_found_log and text not in found_list:
+                    no_found_list.append(text)
         
-        open(output_folder+filename, 'w', encoding='utf-8').write(file_content)   
+        open(output_folder+filename, 'wb').write(file_content)
+    
+    for item in no_found_list:
+        no_found_log += '> ' + text + '\n'
+    for k, v in too_long_dic.items():
+        too_long_log += '> ' + k + '\n    ' + k.encode('utf-8').hex() + '\n    ' + v + '\n    ' + v.encode('utf-8').hex() + '\n\n'
+    
+    if no_found_log == '' and too_long_log == '':
+        QMessageBox.about(EnteringWindow, "!!تهانيّ", "انتهى الإدخال.")
+    if no_found_log != '':
+        msg = QMessageBox()
+        msg.setText(no_found_log)
+        msg.setWindowTitle("ما لم يتم إيجاده")
+        msg.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse);
+        msg.exec_()
+    if too_long_log != '':
+        msg = QMessageBox()
+        msg.setText(too_long_log)
+        msg.setWindowTitle("أطول من النصوص الأصلية")
+        msg.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse);
+        msg.exec_()
     
 
 ##توصيل الإشارات
@@ -328,6 +403,6 @@ convert_enter_button.clicked.connect(lambda: enter())
 input_from_folder.clicked.connect(lambda: open_folder('input'))
 output_from_folder.clicked.connect(lambda: open_folder('output'))
 
-#النوافذ
+#تشغيل البرنامج
 MainWindow.show()
 exit(app.exec_())
