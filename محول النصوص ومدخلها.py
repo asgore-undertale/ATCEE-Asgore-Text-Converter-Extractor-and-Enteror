@@ -142,7 +142,7 @@ menubar.addAction(about)
 
 #نافذة الإدخال
 EnteringWindow = QMainWindow()
-EnteringWindow.setFixedSize(756, 290)
+EnteringWindow.setFixedSize(756, 330)
 EnteringWindow.setWindowTitle("نافذة الإدخال")
 
 translate_text = QTextEdit(EnteringWindow)
@@ -181,24 +181,35 @@ label_2.setText("الترجمة:")
 database_check = QCheckBox("استخدام قاعدة البيانات", EnteringWindow)
 database_check.setGeometry(QtCore.QRect(570, 190, 150, 16))
 database_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+
+after_text = QTextEdit(EnteringWindow)
+after_text.setGeometry(QtCore.QRect(420, 218, 30, 26))
+after_text_label = QLabel(EnteringWindow)
+after_text_label.setGeometry(QtCore.QRect(450, 218, 60, 26))
+after_text_label.setText("ما يلحقه:")
+before_text = QTextEdit(EnteringWindow)
+before_text.setGeometry(QtCore.QRect(520, 218, 30, 26))
+before_text_label = QLabel(EnteringWindow)
+before_text_label.setGeometry(QtCore.QRect(550, 218, 160, 26))
+before_text_label.setText("ما يسبق النص في الملفات:")
+
 too_long_check = QCheckBox("عدم إدخال ترجمات أطول من النص الأصلي (بقيم الهيكس)", EnteringWindow)
-too_long_check.setGeometry(QtCore.QRect(270, 215,450, 16))
+too_long_check.setGeometry(QtCore.QRect(270, 255,450, 16))
 too_long_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 translation_place_check = QCheckBox(":مكان الترجمة في حال كانت أقصر", EnteringWindow)
-translation_place_check.setGeometry(QtCore.QRect(270, 240,450, 16))
+translation_place_check.setGeometry(QtCore.QRect(270, 280,450, 16))
 translation_place_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 
-#if selected:
 first_radio = QRadioButton(EnteringWindow)
-first_radio.setGeometry(QtCore.QRect(220, 265,450, 16))
+first_radio.setGeometry(QtCore.QRect(220, 305,450, 16))
 first_radio.setText("أول")
 first_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
 middle_radio = QRadioButton(EnteringWindow)
-middle_radio.setGeometry(QtCore.QRect(150, 265,450, 16))
+middle_radio.setGeometry(QtCore.QRect(150, 305,450, 16))
 middle_radio.setText("وسط")
 middle_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
 last_radio = QRadioButton(EnteringWindow)
-last_radio.setGeometry(QtCore.QRect(80, 265,450, 16))
+last_radio.setGeometry(QtCore.QRect(80, 305,450, 16))
 last_radio.setText("آخر")
 last_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
 
@@ -338,6 +349,9 @@ def enter(convert_bool=True):
         file_content = open(input_folder+filename, 'rb').read()
         
         for text, translation in text_dic.items():
+            text = before_text.toPlainText() + text + after_text.toPlainText()
+            translation = before_text.toPlainText() + translation + after_text.toPlainText()
+            
             if translation_place_check.isChecked() and len(translation.encode('utf-8').hex()) < len(text.encode('utf-8').hex()):
                 spaces_count = (len(text.encode('utf-8').hex()) // 2) - (len(translation.encode('utf-8').hex()) // 2)
                 if first_radio.isChecked():#first
