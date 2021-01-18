@@ -23,7 +23,7 @@ about_textbox = QTextEdit(AboutWindow)
 about_textbox.setGeometry(QtCore.QRect(0, 0, 378, 146))
 about_textbox.setFont(labels_font)
 about_textbox.setReadOnly(True)
-about_textbox.setText("طوّرت هذه الأداة من قبل Asgore_Undertale\nصفحتي على github:\nhttps://github.com/asgore-undertale\nلك كامل الحرية في التعديل والنشر،\nبشرط ذكري وصفحتي.")
+about_textbox.setText("طوّرت هذه الأداة من قبل Asgore_Undertale\nصفحتي على github:\nhttps://github.com/asgore-undertale\nوشكرا للأخ كوتشكي على تخطيط الواجهات:\nhttps://twitter.com/AHMED23803201\nلك كامل الحرية في التعديل والنشر،\nبشرط ذكري وصفحتي.")
 
 
 #نافذة خيارات التحويل
