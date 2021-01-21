@@ -179,6 +179,9 @@ def script(text, textzone_width, lines_num, database_directory = '', new_line_co
                 else:
                     if char in chars_dic:
                         char_width = chars_dic[char]
+                        if char_width > textzone_width:
+                            print(char + 'is wider than text zone')
+                            continue
                     else:
                         char_width = 0
                     if x + char_width > textzone_width:
@@ -215,6 +218,9 @@ def script(text, textzone_width, lines_num, database_directory = '', new_line_co
                     else:
                         if char in chars_dic:
                             char_width = chars_dic[char]
+                            if char_width > textzone_width:
+                                print(char + 'is wider than text zone')
+                                continue
                         else:
                             char_width = 0
                         new_text += char
@@ -236,15 +242,22 @@ def script(text, textzone_width, lines_num, database_directory = '', new_line_co
                     else:
                         if char in chars_dic:
                             char_width = chars_dic[char]
+                            if char_width > textzone_width:
+                                print(char + 'is wider than text zone')
+                                continue
                         else:
                             char_width = 0
                         new_text += char
                         x += char_width
 
-    if new_line_com != '': 
-        new_text = new_text.replace(u'\uffff', new_line_com)
-        new_text = new_text.replace(" "+new_line_com, new_line_com).replace(new_line_com+" ", new_line_com)
     if new_page_com != '': 
         new_text = new_text.replace(u'\ufffe', new_page_com)
         new_text = new_text.replace(" "+new_page_com, new_page_com).replace(new_page_com+" ", new_page_com)
+    else:
+        if new_line_com != '': 
+            new_text = new_text.replace(u'\ufffe', new_line_com)
+        
+    if new_line_com != '': 
+        new_text = new_text.replace(u'\uffff', new_line_com)
+        new_text = new_text.replace(" "+new_line_com, new_line_com).replace(new_line_com+" ", new_line_com)
     return new_text

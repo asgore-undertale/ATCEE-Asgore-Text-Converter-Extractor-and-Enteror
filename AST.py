@@ -78,44 +78,48 @@ FIB_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 
 ##
 UC_database_button = QPushButton(OptionsWindow)
-UC_database_button.setGeometry(QtCore.QRect(35, 20, 93, 56))
+UC_database_button.setGeometry(QtCore.QRect(35, 10, 93, 56))
 UC_database_button.setText("قاعدة بيانات\nالتحويل")
 UC_database_button = QPushButton(OptionsWindow)
-UC_database_button.setGeometry(QtCore.QRect(35, 80, 93, 56))
+UC_database_button.setGeometry(QtCore.QRect(35, 70, 93, 56))
 UC_database_button.setText("قاعدة بيانات\nعرض الحروف")
 
-RT_start_command = QTextEdit(OptionsWindow)
-RT_start_command.setGeometry(QtCore.QRect(10, 152, 50, 26))
-RT_start_label = QLabel(OptionsWindow)
-RT_start_label.setGeometry(QtCore.QRect(100, 152, 60, 26))
-RT_start_label.setText("قبل الأوامر:")
-RT_end_command = QTextEdit(OptionsWindow)
-RT_end_command.setGeometry(QtCore.QRect(10, 185, 50, 26))
-RT_end_label = QLabel(OptionsWindow)
-RT_end_label.setGeometry(QtCore.QRect(125, 185, 35, 26))
-RT_end_label.setText("بعدها:")
+start_command = QTextEdit(OptionsWindow)
+start_command.setGeometry(QtCore.QRect(10, 142, 50, 26))
+start_com_label = QLabel(OptionsWindow)
+start_com_label.setGeometry(QtCore.QRect(100, 142, 60, 26))
+start_com_label.setText("قبل الأوامر:")
+end_command = QTextEdit(OptionsWindow)
+end_command.setGeometry(QtCore.QRect(10, 175, 50, 26))
+end_com_end_label = QLabel(OptionsWindow)
+end_com_end_label.setGeometry(QtCore.QRect(125, 175, 35, 26))
+end_com_end_label.setText("بعدها:")
 
-RT_page_command = QTextEdit(OptionsWindow)
-RT_page_command.setGeometry(QtCore.QRect(10, 218, 50, 26))
-RT_page_label = QLabel(OptionsWindow)
-RT_page_label.setGeometry(QtCore.QRect(65, 218, 95, 26))
-RT_page_label.setText("أمر صفحة جديدة:")
-RT_line_command = QTextEdit(OptionsWindow)
-RT_line_command.setGeometry(QtCore.QRect(10, 251, 50, 26))
-RT_line_label = QLabel(OptionsWindow)
-RT_line_label.setGeometry(QtCore.QRect(95, 251, 65, 26))
-RT_line_label.setText("سطر جديد:")
+page_command = QTextEdit(OptionsWindow)
+page_command.setGeometry(QtCore.QRect(10, 208, 50, 26))
+page_com_label = QLabel(OptionsWindow)
+page_com_label.setGeometry(QtCore.QRect(65, 208, 95, 26))
+page_com_label.setText("أمر صفحة جديدة:")
+line_command = QTextEdit(OptionsWindow)
+line_command.setGeometry(QtCore.QRect(10, 241, 50, 26))
+line_com_label = QLabel(OptionsWindow)
+line_com_label.setGeometry(QtCore.QRect(95, 241, 65, 26))
+line_com_label.setText("سطر جديد:")
 
 textzone_width = QTextEdit(OptionsWindow)
-textzone_width.setGeometry(QtCore.QRect(10, 284, 50, 26))
+textzone_width.setGeometry(QtCore.QRect(10, 274, 50, 26))
 textzone_width_label = QLabel(OptionsWindow)
-textzone_width_label.setGeometry(QtCore.QRect(65, 284, 95, 26))
+textzone_width_label.setGeometry(QtCore.QRect(65, 274, 95, 26))
 textzone_width_label.setText("عرض المربع (px):")
 textzone_lines = QTextEdit(OptionsWindow)
-textzone_lines.setGeometry(QtCore.QRect(10, 317, 50, 26))
+textzone_lines.setGeometry(QtCore.QRect(10, 307, 50, 26))
 textzone_lines_label = QLabel(OptionsWindow)
-textzone_lines_label.setGeometry(QtCore.QRect(80, 317, 80, 26))
+textzone_lines_label.setGeometry(QtCore.QRect(80, 307, 80, 26))
 textzone_lines_label.setText("سطور المربع:")
+
+Slash_check = QCheckBox(u"\u005c\u006e" + ", " + u"\u005c\u0074" + ", " + u"\u005c\u0072" + ", " + u"\u005c\u0061" + "  :مراعاة", OptionsWindow)
+Slash_check.setGeometry(QtCore.QRect(15, 335, 140, 26))
+Slash_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 ##
 
 
@@ -288,10 +292,18 @@ def convert(text):
         if not path.exists(width_database_directory):
             QMessageBox.about(MainWindow, "!!خطأ", "قاعدة بيانات الوضع في مربع غير موجودة،\nتم إيقاف كل العمليات.")
             return
+    ##
     
-    '''################################'''
-    
-    text = text.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+    if Slash_check.isChecked():
+        _start_command = start_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        _end_command = end_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        _page_command = page_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        _line_command = line_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+    else:
+        _start_command = start_command.toPlainText()
+        _end_command = end_command.toPlainText()
+        _page_command = page_command.toPlainText()
+        _line_command = line_command.toPlainText()
     
     if DDL_check.isChecked():#Delete Duplicated lines
         from Scripts.Delete_Duplicated_lines import script
@@ -312,7 +324,7 @@ def convert(text):
     if FIB_check.isChecked():#Fit in box
         if textzone_width.toPlainText() != '' and textzone_lines.toPlainText() != '':
             from Scripts.Fit_in_box import script
-            text = script(text, int(textzone_width.toPlainText()), int(textzone_lines.toPlainText()), width_database_directory, RT_line_command.toPlainText(), RT_page_command.toPlainText())
+            text = script(text, int(textzone_width.toPlainText()), int(textzone_lines.toPlainText()), width_database_directory, _line_command, _page_command)
 
     if C_check.isChecked():#Convert
         from Scripts.Un_Convert import script
@@ -328,11 +340,11 @@ def convert(text):
         
     if RT_check.isChecked():#Reverse whole text
         from Scripts.Reverse_text import script
-        text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText(), RT_page_command.toPlainText(), RT_line_command.toPlainText())
+        text = script(text, _start_command, _end_command, _page_command, _line_command)
         
     if RAO_check.isChecked():#‫Reverse Arabic only
         from Scripts.Reverse_text import script
-        text = script(text, RT_start_command.toPlainText(), RT_end_command.toPlainText(), RT_page_command.toPlainText(), RT_line_command.toPlainText(), 'Arabic')
+        text = script(text, _start_command, _end_command, _page_command, _line_command, 'Arabic')
     
     return text
 
