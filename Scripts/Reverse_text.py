@@ -62,8 +62,6 @@ def reverse_script(text, start_command, end_command, case='whole text'):
         return text
 
 def script(text, start_command, end_command, new_page_command='', new_line_command='\n', case='whole text'):
-    text = text.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
-    
     if new_page_command != '': text_pages_list = text.split(new_page_command)
     else: text_pages_list = [text]
     if new_line_command != '':  text_pages_lines_list = [page.split(new_line_command) for page in text_pages_list]

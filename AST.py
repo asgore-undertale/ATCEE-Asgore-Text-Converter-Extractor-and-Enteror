@@ -27,7 +27,7 @@ about_textbox.setText("طوّرت هذه الأداة من قبل Asgore_Underta
 
 
 #نافذة خيارات التحويل
-OptionsWindow_Width = 440
+OptionsWindow_Width = 400
 checkbox_size = [OptionsWindow_Width-5, 16]
 textedit_size = [30, 26]
 def pos_y(line_num, Height = checkbox_size[1], Between_every_y = 20):
@@ -35,7 +35,7 @@ def pos_y(line_num, Height = checkbox_size[1], Between_every_y = 20):
     return y
 
 OptionsWindow = QMainWindow()
-OptionsWindow.setFixedSize(OptionsWindow_Width, 330)
+OptionsWindow.setFixedSize(OptionsWindow_Width, 370)
 OptionsWindow.setWindowTitle("خيارات التحويل")
 
 DDL_check = QCheckBox("حذف الأسطر المكررة", OptionsWindow)
@@ -64,11 +64,6 @@ C_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 UC_check = QCheckBox("إلغاء تحويل النص", OptionsWindow)
 UC_check.setGeometry(QtCore.QRect(0, pos_y(6), checkbox_size[0], checkbox_size[1]))
 UC_check.setLayoutDirection(QtCore.Qt.RightToLeft)
-##
-UC_database_button = QPushButton(OptionsWindow)
-UC_database_button.setGeometry(QtCore.QRect(25, 190, 93, 56))
-UC_database_button.setText("قاعدة بيانات\nالتحويل")
-##
 
 RT_check = QCheckBox("عكس النص", OptionsWindow)
 RT_check.setGeometry(QtCore.QRect(0, pos_y(7), checkbox_size[0], checkbox_size[1]))
@@ -76,28 +71,51 @@ RT_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 RAO_check = QCheckBox("عكس العربية في النص", OptionsWindow)
 RAO_check.setGeometry(QtCore.QRect(0, pos_y(8), checkbox_size[0], checkbox_size[1]))
 RAO_check.setLayoutDirection(QtCore.Qt.RightToLeft)
-##
-RT_end_command = QTextEdit(OptionsWindow)
-RT_end_command.setGeometry(QtCore.QRect(5, 262, 30, 26))
-RT_end_label = QLabel(OptionsWindow)
-RT_end_label.setGeometry(QtCore.QRect(40, 262, 35, 26))
-RT_end_label.setText("بعدها:")
-RT_start_command = QTextEdit(OptionsWindow)
-RT_start_command.setGeometry(QtCore.QRect(110, 262, 30, 26))
-RT_start_label = QLabel(OptionsWindow)
-RT_start_label.setGeometry(QtCore.QRect(145, 262, 60, 26))
-RT_start_label.setText("قبل الأوامر:")
 
-RT_line_command = QTextEdit(OptionsWindow)
-RT_line_command.setGeometry(QtCore.QRect(5, 295, 30, 26))
-RT_line_label = QLabel(OptionsWindow)
-RT_line_label.setGeometry(QtCore.QRect(40, 295, 65, 26))
-RT_line_label.setText("سطر جديد:")
+FIB_check = QCheckBox("ضع النص في مربع", OptionsWindow)
+FIB_check.setGeometry(QtCore.QRect(0, pos_y(9), checkbox_size[0], checkbox_size[1]))
+FIB_check.setLayoutDirection(QtCore.Qt.RightToLeft)
+
+##
+UC_database_button = QPushButton(OptionsWindow)
+UC_database_button.setGeometry(QtCore.QRect(35, 20, 93, 56))
+UC_database_button.setText("قاعدة بيانات\nالتحويل")
+UC_database_button = QPushButton(OptionsWindow)
+UC_database_button.setGeometry(QtCore.QRect(35, 80, 93, 56))
+UC_database_button.setText("قاعدة بيانات\nعرض الحروف")
+
+RT_start_command = QTextEdit(OptionsWindow)
+RT_start_command.setGeometry(QtCore.QRect(10, 152, 50, 26))
+RT_start_label = QLabel(OptionsWindow)
+RT_start_label.setGeometry(QtCore.QRect(100, 152, 60, 26))
+RT_start_label.setText("قبل الأوامر:")
+RT_end_command = QTextEdit(OptionsWindow)
+RT_end_command.setGeometry(QtCore.QRect(10, 185, 50, 26))
+RT_end_label = QLabel(OptionsWindow)
+RT_end_label.setGeometry(QtCore.QRect(125, 185, 35, 26))
+RT_end_label.setText("بعدها:")
+
 RT_page_command = QTextEdit(OptionsWindow)
-RT_page_command.setGeometry(QtCore.QRect(110, 295, 30, 26))
+RT_page_command.setGeometry(QtCore.QRect(10, 218, 50, 26))
 RT_page_label = QLabel(OptionsWindow)
-RT_page_label.setGeometry(QtCore.QRect(145, 295, 95, 26))
+RT_page_label.setGeometry(QtCore.QRect(65, 218, 95, 26))
 RT_page_label.setText("أمر صفحة جديدة:")
+RT_line_command = QTextEdit(OptionsWindow)
+RT_line_command.setGeometry(QtCore.QRect(10, 251, 50, 26))
+RT_line_label = QLabel(OptionsWindow)
+RT_line_label.setGeometry(QtCore.QRect(95, 251, 65, 26))
+RT_line_label.setText("سطر جديد:")
+
+textzone_width = QTextEdit(OptionsWindow)
+textzone_width.setGeometry(QtCore.QRect(10, 284, 50, 26))
+textzone_width_label = QLabel(OptionsWindow)
+textzone_width_label.setGeometry(QtCore.QRect(65, 284, 95, 26))
+textzone_width_label.setText("عرض المربع (px):")
+textzone_lines = QTextEdit(OptionsWindow)
+textzone_lines.setGeometry(QtCore.QRect(10, 317, 50, 26))
+textzone_lines_label = QLabel(OptionsWindow)
+textzone_lines_label.setGeometry(QtCore.QRect(80, 317, 80, 26))
+textzone_lines_label.setText("سطور المربع:")
 ##
 
 
@@ -216,6 +234,7 @@ last_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
 
 ##المتغيرات
 converting_database_directory = 'Scripts/Un-Converting_Database.xlsx'
+width_database_directory = 'Scripts/Chars_Width_Database.xlsx'
 text_database_directory = 'جدول النصوص.xlsx'
 input_folder, output_folder = 'المجلد الحاوي للملفات/', 'مجلد الاستخراج/'
 
@@ -225,20 +244,27 @@ def open_textfile():
     fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'ملف نص', '' , '*')
     if path.exists(fileName):
         entered_text.setPlainText(open(fileName, 'r', encoding='utf-8').read())
-    QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار ملف النص.")
+        QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار ملف النص.")
 
 def open_convert_database():
     fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
     if path.exists(fileName):
         global converting_database_directory
         converting_database_directory = fileName
-    QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+        QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+
+def open_width_database():
+    fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
+    if path.exists(fileName):
+        global width_database_directory
+        width_database_directory = fileName
+        QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_text_database():
     fileName, _ = QFileDialog.getOpenFileName(EnteringWindow, 'قاعدة بيانات النص', '' , '*.xlsx')
     if path.exists(fileName):
         global text_database_directory
-    QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+        QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_folder(case='input'):
     folder = str(QFileDialog.getExistingDirectory(EnteringWindow, "Select Directory"))+'/'
@@ -249,7 +275,7 @@ def open_folder(case='input'):
         else:
             global output_folder
             output_folder = folder
-    QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
+        QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
 
 def convert(text):
     ##إلغاء العملية في حال تحقق إحدى هذه الشروط
@@ -258,6 +284,14 @@ def convert(text):
         if not path.exists(converting_database_directory):
             QMessageBox.about(MainWindow, "!!خطأ", "قاعدة بيانات التحويل غير موجودة،\nتم إيقاف كل العمليات.")
             return
+    if FIB_check.isChecked():
+        if not path.exists(width_database_directory):
+            QMessageBox.about(MainWindow, "!!خطأ", "قاعدة بيانات الوضع في مربع غير موجودة،\nتم إيقاف كل العمليات.")
+            return
+    
+    '''################################'''
+    
+    text = text.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
     
     if DDL_check.isChecked():#Delete Duplicated lines
         from Scripts.Delete_Duplicated_lines import script
@@ -271,10 +305,15 @@ def convert(text):
         from Scripts.Sort_lines import script
         text = script(text, 'long to short')
     
-    if RA_check.isChecked() or C_check.isChecked():#Reshape Arabic
+    if RA_check.isChecked() or C_check.isChecked() or FIB_check.isChecked():#Reshape Arabic
         from Scripts.Re_Unshape_Arabic import script
         text = script(text)
-    
+        
+    if FIB_check.isChecked():#Fit in box
+        if textzone_width.toPlainText() != '' and textzone_lines.toPlainText() != '':
+            from Scripts.Fit_in_box import script
+            text = script(text, int(textzone_width.toPlainText()), int(textzone_lines.toPlainText()), width_database_directory, RT_line_command.toPlainText(), RT_page_command.toPlainText())
+
     if C_check.isChecked():#Convert
         from Scripts.Un_Convert import script
         text = script(text, 'convert', converting_database_directory)
@@ -410,6 +449,7 @@ entering.triggered.connect(lambda: EnteringWindow.show())
 about.triggered.connect(lambda: AboutWindow.show())
 
 UC_database_button.clicked.connect(lambda: open_convert_database())
+UC_database_button.clicked.connect(lambda: open_width_database())
 text_database_button.clicked.connect(lambda: open_text_database())
 
 enter_button.clicked.connect(lambda: enter(False))
