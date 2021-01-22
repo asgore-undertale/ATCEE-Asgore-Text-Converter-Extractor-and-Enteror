@@ -1,14 +1,4 @@
-def script(text, case='reshape'):
-    if case == 'reshape':
-        harakat = "ًٌٍَُِّْ"
-        list1 = 'ئبتثجحخسشصضطظعغفقكلمنهي'
-        list2 = 'آأؤإاةدذرزوى'
-        list3 = 'ء '
-
-        reshaped_text = ''
-        textlist = list(' '+text+' ') #هذه الخطوة ضرورية ليعمل الكود بشكل صحيح
-
-    letters_Table = {'''  '<initial>' '<medial>' '<final>' '<isolated>' '''
+letters_Table = {'''  '<initial>' '<medial>' '<final>' '<isolated>' '''
                     "ء" : [u"\ufe80", u"\ufe80", u"\ufe80", u"\ufe80"], #ء  Xإن محيت الهمزة من هنا فستحدث مشكلة
                     "آ" : [u"\ufe81", u"\ufe82", u"\ufe82", u"\ufe81"], #آ
                     "أ" : [u"\ufe83", u"\ufe84", u"\ufe84", u"\ufe83"], #أ
@@ -50,6 +40,16 @@ def script(text, case='reshape'):
                     "لإ" : [u"\ufef9", u"\ufefa", u"\ufefa", u"\ufef9"], #لإ
                     "لا" : [u"\ufefb", u"\ufefc", u"\ufefc", u"\ufefb"], #لا
     }
+
+def script(text, case='reshape'):
+    if case == 'reshape':
+        harakat = "ًٌٍَُِّْ"
+        list1 = 'ئبتثجحخسشصضطظعغفقكلمنهي'
+        list2 = 'آأؤإاةدذرزوى'
+        list3 = 'ء '
+
+        reshaped_text = ''
+        textlist = list(' '+text+' ') #هذه الخطوة ضرورية ليعمل الكود بشكل صحيح
 
     if case == 'reshape':
         for i in range(1, len(textlist)-1):

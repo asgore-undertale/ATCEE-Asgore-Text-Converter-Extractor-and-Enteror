@@ -328,11 +328,11 @@ def convert(text):
 
     if C_check.isChecked():#Convert
         from Scripts.Un_Convert import script
-        text = script(text, 'convert', converting_database_directory)
+        text = script(text, 'convert', converting_database_directory, _start_command, _end_command)
     
     if UC_check.isChecked():#Unconvert
         from Scripts.Un_Convert import script
-        text = script(text, 'unconvert', converting_database_directory)
+        text = script(text, 'unconvert', converting_database_directory, _start_command, _end_command)
         
     if UA_check.isChecked() or UC_check.isChecked():#Unshape Arabic
         from Scripts.Re_Unshape_Arabic import script

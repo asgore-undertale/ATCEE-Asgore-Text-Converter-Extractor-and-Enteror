@@ -49,16 +49,16 @@ def reverse_script(text, start_command, end_command, case='whole text'):
     else:
         text = text.replace(start_command, end_command)
         text_list = text.split(end_command)
-        for _ in range(0, len(text_list)):
+        for _ in range(len(text_list)):
             if _%2 == 1:
                 text_list[_] = start_command + text_list[_] + end_command
-            else:        
+            else:
                 if case == 'whole text':
                     text_list[_] = text_list[_][::-1]
                 else:
                     text_list[_] = reverse_arabic(text_list[_])
-                text_list[_] = swap_edges_spaces(text_list[_])
-        text = ''.join(text_list)
+                    text_list[_] = swap_edges_spaces(text_list[_])
+        text = ''.join(text_list[::-1])
         return text
 
 def script(text, start_command, end_command, new_page_command='', new_line_command='\n', case='whole text'):
