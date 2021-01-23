@@ -76,7 +76,7 @@ UC_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 RT_check = QCheckBox("عكس النص", OptionsWindow)
 RT_check.setGeometry(QtCore.QRect(0, pos_y(7), checkbox_size[0], checkbox_size[1]))
 RT_check.setLayoutDirection(QtCore.Qt.RightToLeft)
-RAO_check = QCheckBox("عكس العربية في النص (لا يعمل)", OptionsWindow)
+RAO_check = QCheckBox("عكس العربية في النص (تجريبي)", OptionsWindow)
 RAO_check.setGeometry(QtCore.QRect(0, pos_y(8), checkbox_size[0], checkbox_size[1]))
 RAO_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 
