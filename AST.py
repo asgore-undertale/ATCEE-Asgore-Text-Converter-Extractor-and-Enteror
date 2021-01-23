@@ -5,6 +5,14 @@ from sys import argv, exit
 from os import path, listdir
 import openpyxl
 
+##استيراد السكربتات
+from Scripts.Delete_Duplicated_lines import DDL
+from Scripts.Sort_lines import Sort
+from Scripts.Re_Unshape_Arabic import Reshape
+from Scripts.Fit_in_box import fit_in_box, import_from_width_database
+from Scripts.Un_Convert import Convert, import_from_converting_database
+from Scripts.Reverse_text import Reverse
+
 ##
 app = QApplication(argv)
 
@@ -68,7 +76,7 @@ UC_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 RT_check = QCheckBox("عكس النص", OptionsWindow)
 RT_check.setGeometry(QtCore.QRect(0, pos_y(7), checkbox_size[0], checkbox_size[1]))
 RT_check.setLayoutDirection(QtCore.Qt.RightToLeft)
-RAO_check = QCheckBox("عكس العربية في النص", OptionsWindow)
+RAO_check = QCheckBox("عكس العربية في النص (لا يعمل)", OptionsWindow)
 RAO_check.setGeometry(QtCore.QRect(0, pos_y(8), checkbox_size[0], checkbox_size[1]))
 RAO_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 
@@ -80,9 +88,9 @@ FIB_check.setLayoutDirection(QtCore.Qt.RightToLeft)
 UC_database_button = QPushButton(OptionsWindow)
 UC_database_button.setGeometry(QtCore.QRect(35, 10, 93, 56))
 UC_database_button.setText("قاعدة بيانات\nالتحويل")
-UC_database_button = QPushButton(OptionsWindow)
-UC_database_button.setGeometry(QtCore.QRect(35, 70, 93, 56))
-UC_database_button.setText("قاعدة بيانات\nعرض الحروف")
+W_database_button = QPushButton(OptionsWindow)
+W_database_button.setGeometry(QtCore.QRect(35, 70, 93, 56))
+W_database_button.setText("قاعدة بيانات\nعرض الحروف")
 
 start_command = QTextEdit(OptionsWindow)
 start_command.setGeometry(QtCore.QRect(10, 142, 50, 26))
@@ -242,289 +250,10 @@ chars_width_database_directory = 'Scripts/Chars_Width_Database.xlsx'
 text_database_directory = 'جدول النصوص.xlsx'
 input_folder, output_folder = 'المجلد الحاوي للملفات/', 'مجلد الاستخراج/'
 
-##وضعت هذه القواميس هنا كي لا ينشأها البرنامج في كل مرة يستخدم فيها المستخدم تلك السكربتات
-wd = openpyxl.load_workbook(converting_database_directory)
-database = wd.get_sheet_by_name("Database")
-convert_dic={'ً' : database['E2'].value,
-            'ٌ' : database['E3'].value,
-            'ٍ' : database['E4'].value,
-            'َ' : database['E5'].value,
-            'ُ' : database['E6'].value,
-            'ِ' : database['E7'].value,
-            'ّ' : database['E8'].value,
-            'ْ' : database['E9'].value,
-            'ﺀ' : database['E10'].value,
-            'ﺁ' : database['E11'].value,
-            'ﺂ' : database['D11'].value,
-            'ﺃ' : database['E12'].value,
-            'ﺄ' : database['D12'].value,
-            "ﺅ" : database['E13'].value,
-            "ﺆ" : database['D13'].value,
-            "ﺇ" : database['E14'].value,
-            "ﺈ" : database['D14'].value,
-            "ﺉ" : database['E15'].value,
-            "ﺊ" : database['D15'].value,
-            "ﺋ" : database['B15'].value,
-            "ﺌ" : database['C15'].value,
-            "ﺍ" : database['E16'].value,
-            "ﺎ" : database['D16'].value,
-            "ﺏ" : database['E17'].value,
-            "ﺐ" : database['D17'].value,
-            "ﺑ" : database['B17'].value,
-            "ﺒ" : database['C17'].value,
-            "ﺓ" : database['E18'].value,
-            "ﺔ" : database['D18'].value,
-            "ﺕ" : database['E19'].value,
-            "ﺖ" : database['D19'].value,
-            "ﺗ" : database['B19'].value,
-            "ﺘ" : database['C19'].value,
-            "ﺙ" : database['E20'].value,
-            "ﺚ" : database['D20'].value,
-            "ﺛ" : database['B20'].value,
-            "ﺜ" : database['C20'].value,
-            "ﺝ" : database['E21'].value,
-            "ﺞ" : database['D21'].value,
-            "ﺟ" : database['B21'].value,
-            "ﺠ" : database['C21'].value,
-            "ﺡ" : database['E22'].value,
-            "ﺢ" : database['D22'].value,
-            "ﺣ" : database['B22'].value,
-            "ﺤ" : database['C22'].value,
-            "ﺥ" : database['E23'].value,
-            "ﺦ" : database['D23'].value,
-            "ﺧ" : database['B23'].value,
-            "ﺨ" : database['C23'].value,
-            "ﺩ" : database['E24'].value,
-            "ﺪ" : database['D24'].value,
-            "ﺫ" : database['E25'].value,
-            "ﺬ" : database['D25'].value,
-            "ﺭ" : database['E26'].value,
-            "ﺮ" : database['D26'].value,
-            "ﺯ" : database['E27'].value,
-            "ﺰ" : database['D27'].value,
-            "ﺱ" : database['E28'].value,
-            "ﺲ" : database['D28'].value,
-            "ﺳ" : database['B28'].value,
-            "ﺴ" : database['C28'].value,
-            "ﺵ" : database['E29'].value,
-            "ﺶ" : database['D29'].value,
-            "ﺷ" : database['B29'].value,
-            "ﺸ" : database['C29'].value,
-            "ﺹ" : database['E30'].value,
-            "ﺺ" : database['D30'].value,
-            "ﺻ" : database['B30'].value,
-            "ﺼ" : database['C30'].value,
-            "ﺽ" : database['E31'].value,
-            "ﺾ" : database['D31'].value,
-            "ﺿ" : database['B31'].value,
-            "ﻀ" : database['C31'].value,
-            "ﻁ" : database['E32'].value,
-            "ﻂ" : database['D32'].value,
-            "ﻃ" : database['B32'].value,
-            "ﻄ" : database['C32'].value,
-            "ﻅ" : database['E33'].value,
-            "ﻆ" : database['D33'].value,
-            "ﻇ" : database['B33'].value,
-            "ﻈ" : database['C33'].value,
-            "ﻉ" : database['E34'].value,
-            "ﻊ" : database['D34'].value,
-            "ﻋ" : database['B34'].value,
-            "ﻌ" : database['C34'].value,
-            "ﻍ" : database['E35'].value,
-            "ﻎ" : database['D35'].value,
-            "ﻏ" : database['B35'].value,
-            "ﻐ" : database['C35'].value,
-            "ﻑ" : database['E36'].value,
-            "ﻒ" : database['D36'].value,
-            "ﻓ" : database['B36'].value,
-            "ﻔ" : database['C36'].value,
-            "ﻕ" : database['E37'].value,
-            "ﻖ" : database['D37'].value,
-            "ﻗ" : database['B37'].value,
-            "ﻘ" : database['C37'].value,
-            "ﻙ" : database['E38'].value,
-            "ﻚ" : database['D38'].value,
-            "ﻛ" : database['B38'].value,
-            "ﻜ" : database['C38'].value,
-            "ﻝ" : database['E39'].value,
-            "ﻞ" : database['D39'].value,
-            "ﻟ" : database['B39'].value,
-            "ﻠ" : database['C39'].value,
-            "ﻡ" : database['E40'].value,
-            "ﻢ" : database['D40'].value,
-            "ﻣ" : database['B40'].value,
-            "ﻤ" : database['C40'].value,
-            "ﻥ" : database['E41'].value,
-            "ﻦ" : database['D41'].value,
-            "ﻧ" : database['B41'].value,
-            "ﻨ" : database['C41'].value,
-            "ﻩ" : database['E42'].value,
-            "ﻪ" : database['D42'].value,
-            "ﻫ" : database['B42'].value,
-            "ﻬ" : database['C42'].value,
-            "ﻭ" : database['E43'].value,
-            "ﻮ" : database['D43'].value,
-            "ﻯ" : database['E44'].value,
-            "ﻰ" : database['D44'].value,
-            "ﻱ" : database['E45'].value,
-            "ﻲ" : database['D45'].value,
-            "ﻳ" : database['B45'].value,
-            "ﻴ" : database['C45'].value,
-            "ﻵ" : database['E46'].value,
-            "ﻶ" : database['D46'].value,
-            "ﻷ" : database['E47'].value,
-            "ﻸ" : database['D47'].value,
-            "ﻹ" : database['E48'].value,
-            "ﻺ" : database['D48'].value,
-            "ﻻ" : database['E49'].value,
-            "ﻼ" : database['D49'].value,
-            "؟" : database['E50'].value,
-            "،" : database['E51'].value,
-            "؛" : database['E52'].value,
-            }
-
-wd = openpyxl.load_workbook(chars_width_database_directory)
-database = wd.get_sheet_by_name("Database")
-chars_dic = {'ً' : database['E2'].value,
-            'ٌ' : database['E3'].value,
-            'ٍ' : database['E4'].value,
-            'َ' : database['E5'].value,
-            'ُ' : database['E6'].value,
-            'ِ' : database['E7'].value,
-            'ّ' : database['E8'].value,
-            'ْ' : database['E9'].value,
-            'ﺀ' : database['E10'].value,
-            'ﺁ' : database['E11'].value,
-            'ﺂ' : database['D11'].value,
-            'ﺃ' : database['E12'].value,
-            'ﺄ' : database['D12'].value,
-            "ﺅ" : database['E13'].value,
-            "ﺆ" : database['D13'].value,
-            "ﺇ" : database['E14'].value,
-            "ﺈ" : database['D14'].value,
-            "ﺉ" : database['E15'].value,
-            "ﺊ" : database['D15'].value,
-            "ﺋ" : database['B15'].value,
-            "ﺌ" : database['C15'].value,
-            "ﺍ" : database['E16'].value,
-            "ﺎ" : database['D16'].value,
-            "ﺏ" : database['E17'].value,
-            "ﺐ" : database['D17'].value,
-            "ﺑ" : database['B17'].value,
-            "ﺒ" : database['C17'].value,
-            "ﺓ" : database['E18'].value,
-            "ﺔ" : database['D18'].value,
-            "ﺕ" : database['E19'].value,
-            "ﺖ" : database['D19'].value,
-            "ﺗ" : database['B19'].value,
-            "ﺘ" : database['C19'].value,
-            "ﺙ" : database['E20'].value,
-            "ﺚ" : database['D20'].value,
-            "ﺛ" : database['B20'].value,
-            "ﺜ" : database['C20'].value,
-            "ﺝ" : database['E21'].value,
-            "ﺞ" : database['D21'].value,
-            "ﺟ" : database['B21'].value,
-            "ﺠ" : database['C21'].value,
-            "ﺡ" : database['E22'].value,
-            "ﺢ" : database['D22'].value,
-            "ﺣ" : database['B22'].value,
-            "ﺤ" : database['C22'].value,
-            "ﺥ" : database['E23'].value,
-            "ﺦ" : database['D23'].value,
-            "ﺧ" : database['B23'].value,
-            "ﺨ" : database['C23'].value,
-            "ﺩ" : database['E24'].value,
-            "ﺪ" : database['D24'].value,
-            "ﺫ" : database['E25'].value,
-            "ﺬ" : database['D25'].value,
-            "ﺭ" : database['E26'].value,
-            "ﺮ" : database['D26'].value,
-            "ﺯ" : database['E27'].value,
-            "ﺰ" : database['D27'].value,
-            "ﺱ" : database['E28'].value,
-            "ﺲ" : database['D28'].value,
-            "ﺳ" : database['B28'].value,
-            "ﺴ" : database['C28'].value,
-            "ﺵ" : database['E29'].value,
-            "ﺶ" : database['D29'].value,
-            "ﺷ" : database['B29'].value,
-            "ﺸ" : database['C29'].value,
-            "ﺹ" : database['E30'].value,
-            "ﺺ" : database['D30'].value,
-            "ﺻ" : database['B30'].value,
-            "ﺼ" : database['C30'].value,
-            "ﺽ" : database['E31'].value,
-            "ﺾ" : database['D31'].value,
-            "ﺿ" : database['B31'].value,
-            "ﻀ" : database['C31'].value,
-            "ﻁ" : database['E32'].value,
-            "ﻂ" : database['D32'].value,
-            "ﻃ" : database['B32'].value,
-            "ﻄ" : database['C32'].value,
-            "ﻅ" : database['E33'].value,
-            "ﻆ" : database['D33'].value,
-            "ﻇ" : database['B33'].value,
-            "ﻈ" : database['C33'].value,
-            "ﻉ" : database['E34'].value,
-            "ﻊ" : database['D34'].value,
-            "ﻋ" : database['B34'].value,
-            "ﻌ" : database['C34'].value,
-            "ﻍ" : database['E35'].value,
-            "ﻎ" : database['D35'].value,
-            "ﻏ" : database['B35'].value,
-            "ﻐ" : database['C35'].value,
-            "ﻑ" : database['E36'].value,
-            "ﻒ" : database['D36'].value,
-            "ﻓ" : database['B36'].value,
-            "ﻔ" : database['C36'].value,
-            "ﻕ" : database['E37'].value,
-            "ﻖ" : database['D37'].value,
-            "ﻗ" : database['B37'].value,
-            "ﻘ" : database['C37'].value,
-            "ﻙ" : database['E38'].value,
-            "ﻚ" : database['D38'].value,
-            "ﻛ" : database['B38'].value,
-            "ﻜ" : database['C38'].value,
-            "ﻝ" : database['E39'].value,
-            "ﻞ" : database['D39'].value,
-            "ﻟ" : database['B39'].value,
-            "ﻠ" : database['C39'].value,
-            "ﻡ" : database['E40'].value,
-            "ﻢ" : database['D40'].value,
-            "ﻣ" : database['B40'].value,
-            "ﻤ" : database['C40'].value,
-            "ﻥ" : database['E41'].value,
-            "ﻦ" : database['D41'].value,
-            "ﻧ" : database['B41'].value,
-            "ﻨ" : database['C41'].value,
-            "ﻩ" : database['E42'].value,
-            "ﻪ" : database['D42'].value,
-            "ﻫ" : database['B42'].value,
-            "ﻬ" : database['C42'].value,
-            "ﻭ" : database['E43'].value,
-            "ﻮ" : database['D43'].value,
-            "ﻯ" : database['E44'].value,
-            "ﻰ" : database['D44'].value,
-            "ﻱ" : database['E45'].value,
-            "ﻲ" : database['D45'].value,
-            "ﻳ" : database['B45'].value,
-            "ﻴ" : database['C45'].value,
-            "ﻵ" : database['E46'].value,
-            "ﻶ" : database['D46'].value,
-            "ﻷ" : database['E47'].value,
-            "ﻸ" : database['D47'].value,
-            "ﻹ" : database['E48'].value,
-            "ﻺ" : database['D48'].value,
-            "ﻻ" : database['E49'].value,
-            "ﻼ" : database['D49'].value,
-            "؟" : database['E50'].value,
-            "،" : database['E51'].value,
-            "؛" : database['E52'].value,
-            "." : database['E53'].value,
-            " " : database['E54'].value,
-        }
-##
+if path.exists(converting_database_directory):
+    import_from_converting_database(converting_database_directory)
+if path.exists(chars_width_database_directory):
+    import_from_width_database(chars_width_database_directory)
 
 #الدوال
 def open_textfile():
@@ -538,6 +267,8 @@ def open_convert_database():
     if path.exists(fileName):
         global converting_database_directory
         converting_database_directory = fileName
+        if path.exists(converting_database_directory):
+            import_from_converting_database(converting_database_directory)
         QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_width_database():
@@ -545,22 +276,24 @@ def open_width_database():
     if path.exists(fileName):
         global chars_width_database_directory
         chars_width_database_directory = fileName
+        if path.exists(chars_width_database_directory):
+            import_from_width_database(chars_width_database_directory)
         QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_text_database():
     fileName, _ = QFileDialog.getOpenFileName(EnteringWindow, 'قاعدة بيانات النص', '' , '*.xlsx')
     if path.exists(fileName):
         global text_database_directory
+        text_database_directory = fileName
         QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
 
 def open_folder(case='input'):
     folder = str(QFileDialog.getExistingDirectory(EnteringWindow, "Select Directory"))+'/'
     if path.exists(folder):
+        global input_folder, output_folder
         if case == 'input':
-            global input_folder
             input_folder = folder
         else:
-            global output_folder
             output_folder = folder
         QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
 
@@ -589,45 +322,37 @@ def convert(text):
         _line_command = line_command.toPlainText()
     
     if DDL_check.isChecked():#Delete Duplicated lines
-        from Scripts.Delete_Duplicated_lines import script
-        text = script(text)
+        text = DDL(text)
     
     if SSL_check.isChecked():#Sort short to long
-        from Scripts.Sort_lines import script
-        text = script(text)
+        text = Sort(text)
     
     if SLS_check.isChecked():#Sort long to short
-        from Scripts.Sort_lines import script
-        text = script(text, 'long to short')
+        text = Sort(text, 'long to short')
     
     if RA_check.isChecked() or C_check.isChecked() or FIB_check.isChecked():#Reshape Arabic
-        from Scripts.Re_Unshape_Arabic import script
-        text = script(text)
+        text = Reshape(text)
         
     if FIB_check.isChecked():#Fit in box
         if textzone_width.toPlainText() != '' and textzone_lines.toPlainText() != '':
-            from Scripts.Fit_in_box import script
-            text = script(text, int(textzone_width.toPlainText()), int(textzone_lines.toPlainText()), chars_dic, _line_command, _page_command)
+            text = fit_in_box(text, int(textzone_width.toPlainText()), int(textzone_lines.toPlainText()), _line_command, _page_command, _start_command, _end_command)
+        else:
+            QMessageBox.about(EnteringWindow, "!!خطأ", "املأ حقلي: عرض المربع، عدد سطور المربع.")
 
     if C_check.isChecked():#Convert
-        from Scripts.Un_Convert import script
-        text = script(text, 'convert', convert_dic, _start_command, _end_command)
+        text = Convert(text, 'convert', _start_command, _end_command)
     
     if UC_check.isChecked():#Unconvert
-        from Scripts.Un_Convert import script
-        text = script(text, 'unconvert', convert_dic, _start_command, _end_command)
+        text = Convert(text, 'unconvert', _start_command, _end_command)
         
     if UA_check.isChecked() or UC_check.isChecked():#Unshape Arabic
-        from Scripts.Re_Unshape_Arabic import script
-        text = script(text, 'unshape')
+        text = Reshape(text, 'unshape')
         
     if RT_check.isChecked():#Reverse whole text
-        from Scripts.Reverse_text import script
-        text = script(text, _start_command, _end_command, _page_command, _line_command)
+        text = Reverse(text, _start_command, _end_command, _page_command, _line_command)
         
     if RAO_check.isChecked():#‫Reverse Arabic only
-        from Scripts.Reverse_text import script
-        text = script(text, _start_command, _end_command, _page_command, _line_command, 'Arabic')
+        text = Reverse(text, _start_command, _end_command, _page_command, _line_command, 'Arabic')
     
     return text
 
@@ -744,7 +469,7 @@ entering.triggered.connect(lambda: EnteringWindow.show())
 about.triggered.connect(lambda: AboutWindow.show())
 
 UC_database_button.clicked.connect(lambda: open_convert_database())
-UC_database_button.clicked.connect(lambda: open_width_database())
+W_database_button.clicked.connect(lambda: open_width_database())
 text_database_button.clicked.connect(lambda: open_text_database())
 
 enter_button.clicked.connect(lambda: enter(False))

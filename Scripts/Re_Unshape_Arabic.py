@@ -41,7 +41,7 @@ letters_Table = {'''  '<initial>' '<medial>' '<final>' '<isolated>' '''
                     "لا" : [u"\ufefb", u"\ufefc", u"\ufefc", u"\ufefb"], #لا
     }
 
-def script(text, case='reshape'):
+def Reshape(text, case='reshape'):
     if case == 'reshape':
         harakat = "ًٌٍَُِّْ"
         list1 = 'ئبتثجحخسشصضطظعغفقكلمنهي'

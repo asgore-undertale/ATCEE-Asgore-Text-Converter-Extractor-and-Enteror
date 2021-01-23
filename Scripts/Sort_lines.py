@@ -1,4 +1,4 @@
-def script(text, case = 'short to long'):
+def Sort(text, case = 'short to long'):
     lines_list = text.split('\n')
     lines_list.sort(key=len)
     

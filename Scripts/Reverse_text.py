@@ -61,7 +61,7 @@ def reverse_script(text, start_command, end_command, case='whole text'):
         text = ''.join(text_list[::-1])
         return text
 
-def script(text, start_command, end_command, new_page_command='', new_line_command='\n', case='whole text'):
+def Reverse(text, start_command, end_command, new_page_command='', new_line_command='\n', case='whole text'):
     if new_page_command != '': text_pages_list = text.split(new_page_command)
     else: text_pages_list = [text]
     if new_line_command != '':  text_pages_lines_list = [page.split(new_line_command) for page in text_pages_list]
@@ -75,4 +75,5 @@ def script(text, start_command, end_command, new_page_command='', new_line_comma
             if len(text_pages_lines_list[page])-1 > line: reversed_text += new_line_command 
         if len(text_pages_lines_list)-1 > page : reversed_text += new_page_command 
     
+    if case == 'whole text': reversed_text = '\n'.join(reversed_text.split('\n')[::-1])
     return reversed_text
