@@ -380,6 +380,8 @@ def enter(convert_bool=True):
     if len(files_list) == 0:
         QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف كل العمليات،\nلا توجد أي ملفات للإدخال إليها.")
         return
+    ##
+    
     if database_check.isChecked():
         if not path.exists(text_database_directory):
             QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف كل العمليات،\nقاعدة بيانات النصوص غير موجودة.")
@@ -405,7 +407,8 @@ def enter(convert_bool=True):
         text_dic[original_text.toPlainText()] = translate_text.toPlainText()
     
     for filename in files_list:
-        file_content = open(input_folder+filename, 'rb').read()
+        with open(input_folder+filename, 'rb') as f:
+        file_content = f.read()
         
         for text, translation in text_dic.items():
             text = before_text.toPlainText() + text + after_text.toPlainText()
