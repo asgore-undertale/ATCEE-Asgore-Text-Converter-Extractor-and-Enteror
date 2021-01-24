@@ -10,4 +10,4 @@ python (ويفضل دائما آخر إصدار)
 
 
 صور للأداة:
-![2021-01-18 17_34_17-إعدادات](https://user-images.githubusercontent.com/52295461/104937316-4b77e280-59b6-11eb-87f2-4bb3e00c5b3e.png)
+![2021-01-24 13_56_15-ATCE-Asgore-Text-Converter-and-Enteror](https://user-images.githubusercontent.com/52295461/105629515-1ce18800-5e4c-11eb-992b-9f7d781f1fef.png)
