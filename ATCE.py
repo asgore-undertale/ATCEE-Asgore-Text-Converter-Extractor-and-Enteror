@@ -408,7 +408,7 @@ def enter(convert_bool=True):
     
     for filename in files_list:
         with open(input_folder+filename, 'rb') as f:
-        file_content = f.read()
+            file_content = f.read()
         
         for text, translation in text_dic.items():
             text = before_text.toPlainText() + text + after_text.toPlainText()
