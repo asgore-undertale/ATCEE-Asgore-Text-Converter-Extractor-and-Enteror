@@ -1,3 +1,5 @@
+import re
+
 bows_list = ['()', '[]', '{}', '<>']
 Arabic_letters = 'ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىي' + '؟،؛ﺀﺁﺂﺃﺄﺅﺆﺇﺈﺉﺊﺋﺌﺍﺎﺏﺐﺑﺒﺓﺔﺕﺖﺗﺘﺙﺚﺛﺜﺝﺞﺟﺠﺡﺢﺣﺤﺥﺦﺧﺨﺩﺪﺫﺬﺭﺮﺯﺰﺱﺲﺳﺴﺵﺶﺷﺸﺹﺺﺻﺼﺽﺾﺿﻀﻁﻂﻃﻄﻅﻆﻇﻈﻉﻊﻋﻌﻍﻎﻏﻐﻑﻒﻓﻔﻕﻖﻗﻘﻙﻚﻛﻜﻝﻞﻟﻠﻡﻢﻣﻤﻥﻦﻧﻨﻩﻪﻫﻬﻭﻮﻯﻰﻱﻲﻳﻴﻵﻶﻷﻸﻹﻺﻻﻼ'
 
@@ -47,8 +49,15 @@ def reverse_script(text, start_command, end_command, case='whole text'):
             text = reverse_arabic(text)
         return text
     else:
-        text = text.replace(start_command, end_command)
-        text_list = text.split(end_command)
+        commands_chars = '.[]{}*+?()^'
+        re_start_command = start_command
+        re_end_command = end_command
+        for char in commands_chars:
+            re_start_command = re_start_command.replace(char, '\\'+char)
+            re_end_command = re_end_command.replace(char, '\\'+char)
+        pattern = re_start_command + "(.*?)" + re_end_command
+        text_list = re.split(pattern, text)
+        
         for _ in range(len(text_list)):
             if _%2 == 1:
                 text_list[_] = start_command + text_list[_] + end_command

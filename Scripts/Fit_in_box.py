@@ -1,4 +1,6 @@
 import openpyxl
+import re
+
 chars_width_dic = ''
 
 def import_from_width_database(chars_width_database_directory):
@@ -251,8 +253,14 @@ def fit_in_box(text, textzone_width, lines_num, new_line_com = '\n', new_page_co
         text = text.replace('\n', ' ')
     
     if start_command != '' and end_command != '':
-        text = text.replace(end_command, start_command)
-        text_list = text.split(start_command)
+        commands_chars = '.[]{}*+?()^'
+        re_start_command = start_command
+        re_end_command = end_command
+        for char in commands_chars:
+            re_start_command = re_start_command.replace(char, '\\'+char)
+            re_end_command = re_end_command.replace(char, '\\'+char)
+        pattern = re_start_command + "(.*?)" + re_end_command
+        text_list = re.split(pattern, text)
     else:
         text_list = [text]
     
