@@ -15,4 +15,4 @@ python (ويفضل دائما آخر إصدار)
 .
 
 صور للأداة:
-![2021-01-24 14_01_15-C__Users_023_AppData_Local_Programs_Python_Python39_python exe](https://user-images.githubusercontent.com/52295461/105629611-b01abd80-5e4c-11eb-860b-0244bddf54e5.png)
+![1442-06-20 23_25_46-نافذة الإدخال](https://user-images.githubusercontent.com/52295461/106665418-54240780-65b7-11eb-85e0-5152ef3d6e9b.png)
