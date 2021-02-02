@@ -41,8 +41,8 @@ letters_Table = {'''  '<initial>' '<medial>' '<final>' '<isolated>' '''
                     "لا" : [u"\ufefb", u"\ufefc", u"\ufefc", u"\ufefb"], #لا
     }
 
-def Reshape(text, case='reshape'):
-    if case == 'reshape':
+def Reshape(text, case = True):
+    if case:
         harakat = "ًٌٍَُِّْ"
         list1 = 'ئبتثجحخسشصضطظعغفقكلمنهي'
         list2 = 'آأؤإاةدذرزوى'
@@ -51,7 +51,6 @@ def Reshape(text, case='reshape'):
         reshaped_text = ''
         textlist = list(' '+text+' ') #هذه الخطوة ضرورية ليعمل الكود بشكل صحيح
 
-    if case == 'reshape':
         for i in range(1, len(textlist)-1):
             #تقرير إن كان الحرف متصلا بما قبله أم لا
             aroundbefore = 1

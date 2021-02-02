@@ -144,11 +144,11 @@ def import_from_converting_database(converting_database_directory):
             "؛" : database['E52'].value,
             }
 
-def Convert(text, case='convert', start_command = '', end_command = ''):
+def Convert(text, case = True, start_command = '', end_command = ''):
     global convert_dic
     
     def Convert_text(text):
-        if case == 'convert':
+        if case:
             for char in text:
                 if char in convert_dic and convert_dic[char] != None and convert_dic[char] != '':
                     text = text.replace(char, convert_dic[char])
