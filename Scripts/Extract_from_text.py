@@ -12,6 +12,8 @@ def Extract(text, case = True, before = '', after = '', mini = False, maxi = Fal
     English_Letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     Symbols = '1234567890-=!"£$%^&*()_+`[];"@\|:~{}<>?./,# ' + "'"
     commands_chars = '.[]{}*+?()^'
+    
+    text = text.replace('\n', ' ')#الريجيكس يعاني مشاكل مع عودات السطر
     ##
     
     def minimax(text):

@@ -146,16 +146,16 @@ after_text_convert_label = QLabel(OptionsWindow)
 after_text_convert_label.setGeometry(QtCore.QRect(65, 401, 95, 26))
 after_text_convert_label.setText("ما بعدها:")
 
-max_text_convert = QTextEdit(OptionsWindow)
-max_text_convert.setGeometry(QtCore.QRect(10, 434, 50, 26))
-max_text_convert_label = QLabel(OptionsWindow)
-max_text_convert_label.setGeometry(QtCore.QRect(65, 434, 95, 26))
-max_text_convert_label.setText("أقصى حد لطولها:")
 min_text_convert = QTextEdit(OptionsWindow)
-min_text_convert.setGeometry(QtCore.QRect(10, 467, 50, 26))
+min_text_convert.setGeometry(QtCore.QRect(10, 434, 50, 26))
 min_text_convert_label = QLabel(OptionsWindow)
-min_text_convert_label.setGeometry(QtCore.QRect(65, 467, 95, 26))
+min_text_convert_label.setGeometry(QtCore.QRect(65, 434, 95, 26))
 min_text_convert_label.setText("أقصى حد لقصرها:")
+max_text_convert = QTextEdit(OptionsWindow)
+max_text_convert.setGeometry(QtCore.QRect(10, 467, 50, 26))
+max_text_convert_label = QLabel(OptionsWindow)
+max_text_convert_label.setGeometry(QtCore.QRect(65, 467, 95, 26))
+max_text_convert_label.setText("أقصى حد لطولها:")
 ##
 
 
@@ -359,6 +359,7 @@ def convert(text):
             return
     ##
     
+    ##المتغيرات
     if Slash_check.isChecked():
         _start_command = start_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
         _end_command = end_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
@@ -370,26 +371,41 @@ def convert(text):
         _page_command = page_command.toPlainText()
         _line_command = line_command.toPlainText()
     
+    if '[b]' in _start_command: _start_command = bytearray.fromhex(_start_command.replace('[b]', '')).decode()
+    if '[b]' in _end_command: _end_command = bytearray.fromhex(_end_command.replace('[b]', '')).decode()
+    if '[b]' in _page_command: _page_command = bytearray.fromhex(_page_command.replace('[b]', '')).decode()
+    if '[b]' in _line_command: _line_command = bytearray.fromhex(_line_command.replace('[b]', '')).decode()
+    if '[b]' in textzone_width.toPlainText(): _textzone_width = bytearray.fromhex(textzone_width.toPlainText().replace('[b]', '')).decode()
+    else: _textzone_width = textzone_width.toPlainText()
+    if '[b]' in textzone_lines.toPlainText(): _textzone_width = bytearray.fromhex(textzone_lines.toPlainText().replace('[b]', '')).decode()
+    else: _textzone_lines = textzone_lines.toPlainText()
+    if '[b]' in before_text_convert.toPlainText(): _before_text_convert = bytearray.fromhex(before_text_convert.toPlainText().replace('[b]', '')).decode()
+    else: _before_text_convert = before_text_convert.toPlainText()
+    if '[b]' in after_text_convert.toPlainText(): _after_text_convert = bytearray.fromhex(after_text_convert.toPlainText().replace('[b]', '')).decode()
+    else: _after_text_convert = after_text_convert.toPlainText()
+    
+    ##
+    
     if Ext_check.isChecked():#Extract from text
-        if before_text_convert.toPlainText() == '' or after_text_convert.toPlainText() == '':
+        if _before_text_convert == '' or _after_text_convert == '':
             QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف العملية،\nاملأ حقلي: ما قبل النصوص، ما بعدها.\nعلى الأقل للاستخراج.")
             return
         
-        if min_text_convert.toPlainText() == '':
-            mini = 0
-        else:
-            mini = int(min_text_convert.toPlainText())
-        if max_text_convert.toPlainText() == '':
-            maxi = 0
-        else:
-            maxi = int(max_text_convert.toPlainText())
+        mini = min_text_convert.toPlainText()
+        maxi = max_text_convert.toPlainText()
+        if '[b]' in mini: mini = bytearray.fromhex(mini.replace('[b]', '')).decode()
+        if '[b]' in maxi: maxi = bytearray.fromhex(maxi.replace('[b]', '')).decode()
+        if mini == '': mini = 0
+        else: mini = int(mini)
+        if maxi == '': maxi = 0
+        else: maxi = int(maxi)
         
         if mini > maxi:
             QMessageBox.about(EnteringWindow, "!!خطأ", "لا يمكن أن يكون قصر النصوص أطول من طولها.")
             return
         
-        text = Extract(text, True, before_text_convert.toPlainText(), after_text_convert.toPlainText(), mini, maxi)
-        if isinstance(text, list): text = '\n'.join(text)
+        text = Extract(text, True, _before_text_convert, _after_text_convert, mini, maxi)
+        text = '\n'.join(text)
     
     if DDL_check.isChecked():#Delete Duplicated lines
         text = DDL(text)
@@ -404,8 +420,8 @@ def convert(text):
         text = Reshape(text)
         
     if FIB_check.isChecked():#Fit in box
-        if textzone_width.toPlainText() != '' and textzone_lines.toPlainText() != '':
-            text = fit_in_box(text, int(textzone_width.toPlainText()), int(textzone_lines.toPlainText()), _line_command, _page_command, _start_command, _end_command)
+        if _textzone_width != '' and _textzone_lines != '':
+            text = fit_in_box(text, int(_textzone_width), int(_textzone_lines), _line_command, _page_command, _start_command, _end_command)
         else:
             QMessageBox.about(EnteringWindow, "!!خطأ", "املأ حقلي: عرض المربع، عدد سطور المربع.")
 
@@ -426,7 +442,7 @@ def convert(text):
     
     return text
 
-def enter(convert_bool=True):
+def enter(convert_bool = True):
     ##المتغيرات
     text_dic = {}
     too_long_dic = {}
@@ -537,6 +553,8 @@ def enter(convert_bool=True):
 def extract():
     before = before_text.toPlainText()
     after = after_text.toPlainText()
+    if '[b]' in before: before = bytearray.fromhex(before.replace('[b]', '')).decode() 
+    if '[b]' in after: after = bytearray.fromhex(after.replace('[b]', '')).decode() 
     if before == '' or after == '':
         QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف العملية،\nاملأ حقلي: ما يسبق النصوص، ما يلحقها.\nعلى الأقل.")
         return
@@ -545,14 +563,15 @@ def extract():
         QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف العملية،\nلا توجد أي ملفات للاستخراج منها.")
         return
     
-    if min_text_convert.toPlainText() == '':
-        mini = 0
-    else:
-        mini = int(min_text_convert.toPlainText())
-    if max_text_convert.toPlainText() == '':
-        maxi = 0
-    else:
-        maxi = int(max_text_convert.toPlainText())
+    mini = min_text.toPlainText()
+    maxi = max_text.toPlainText()
+    if '[b]' in mini: mini = bytearray.fromhex(mini.replace('[b]', '')).decode() 
+    if '[b]' in maxi: maxi = bytearray.fromhex(maxi.replace('[b]', '')).decode() 
+    
+    if mini == '': mini = 0
+    else: mini = int(mini)
+    if maxi == '': maxi = 0
+    else: maxi = int(maxi)
     
     if mini > maxi:
         QMessageBox.about(EnteringWindow, "!!خطأ", "لا يمكن أن يكون قصر النصوص أطول من طولها.")
@@ -574,6 +593,7 @@ def extract():
     sheet['A1'].alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
     sheet['A1'].fill = PatternFill(fill_type='solid', start_color='ff8327', end_color='ff8327')
     sheet['B2'].value = "لا تفتح هذا الملف أثناء تشغيل الأداة."
+    sheet['B2'].font = Font(bold=True)
     
     for filename in files_list:
         with open(input_folder+filename, 'r', encoding="cp437") as f:
@@ -585,7 +605,7 @@ def extract():
         sheet['A'+str(row)].fill = PatternFill(fill_type='solid', start_color='D112D1', end_color='D112D1')
         row += 1
         
-        extracted = Extract(file_content, True, before, after, min_text.toPlainText(), max_text.toPlainText())
+        extracted = Extract(file_content, True, before, after, mini, maxi)
         '''map(put_in_sheet, extracted)'''
         for item in extracted:
             sheet['A'+str(row)].font = Font(bold=False)
