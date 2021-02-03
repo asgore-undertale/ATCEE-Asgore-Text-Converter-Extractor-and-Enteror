@@ -1,11 +1,12 @@
 import re
 
 def Extract(text, case = True, before = '', after = '', mini = False, maxi = False):
-    if before == '' or after == '': return text
+    if before == '' or after == '': return
     if mini == '': mini = False
-    else: mini = int(mini)
     if maxi == '': maxi = False
-    else: maxi = int(maxi)
+    if isinstance(mini, str): mini = int(mini)
+    if isinstance(maxi, str): maxi = int(maxi)
+    if mini > maxi: return
     
     # المتغيرات
     English_Letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'

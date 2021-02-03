@@ -374,7 +374,21 @@ def convert(text):
         if before_text_convert.toPlainText() == '' or after_text_convert.toPlainText() == '':
             QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف العملية،\nاملأ حقلي: ما قبل النصوص، ما بعدها.\nعلى الأقل للاستخراج.")
             return
-        text = Extract(text, True, before_text_convert.toPlainText(), after_text_convert.toPlainText(), min_text_convert.toPlainText(), max_text_convert.toPlainText())
+        
+        if min_text_convert.toPlainText() == '':
+            mini = 0
+        else:
+            mini = int(min_text_convert.toPlainText())
+        if max_text_convert.toPlainText() == '':
+            maxi = 0
+        else:
+            maxi = int(max_text_convert.toPlainText())
+        
+        if mini > maxi:
+            QMessageBox.about(EnteringWindow, "!!خطأ", "لا يمكن أن يكون قصر النصوص أطول من طولها.")
+            return
+        
+        text = Extract(text, True, before_text_convert.toPlainText(), after_text_convert.toPlainText(), mini, maxi)
         if isinstance(text, list): text = '\n'.join(text)
     
     if DDL_check.isChecked():#Delete Duplicated lines
@@ -529,6 +543,19 @@ def extract():
     files_list = listdir(input_folder)
     if len(files_list) == 0:
         QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف العملية،\nلا توجد أي ملفات للاستخراج منها.")
+        return
+    
+    if min_text_convert.toPlainText() == '':
+        mini = 0
+    else:
+        mini = int(min_text_convert.toPlainText())
+    if max_text_convert.toPlainText() == '':
+        maxi = 0
+    else:
+        maxi = int(max_text_convert.toPlainText())
+    
+    if mini > maxi:
+        QMessageBox.about(EnteringWindow, "!!خطأ", "لا يمكن أن يكون قصر النصوص أطول من طولها.")
         return
     
     extracted_xlsx = openpyxl.load_workbook(extracted_text_database_directory)
