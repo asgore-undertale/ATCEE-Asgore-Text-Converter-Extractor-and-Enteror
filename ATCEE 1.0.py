@@ -2,7 +2,7 @@
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QCheckBox, QPushButton, QLabel, QMenuBar, QAction, QFileDialog, QMessageBox, QRadioButton
 from sys import argv, exit
-from os import path, listdir
+from os import path, listdir, mkdir
 import openpyxl
 from openpyxl.styles import PatternFill, Alignment, Font
 
@@ -229,16 +229,6 @@ extract_button = QPushButton(EnteringWindow)
 extract_button.setGeometry(QtCore.QRect(330, 130, 93, 28))
 extract_button.setText("استخراج")
 
-input_from_folder = QPushButton(EnteringWindow)
-input_from_folder.setGeometry(QtCore.QRect(610, 300, 93, 41))
-input_from_folder.setText("المجلد الحاوي\nللملفات")
-output_from_folder = QPushButton(EnteringWindow)
-output_from_folder.setGeometry(QtCore.QRect(500, 300, 93, 41))
-output_from_folder.setText("مجلد\nالاستخراج")
-text_database_button = QPushButton(EnteringWindow)
-text_database_button.setGeometry(QtCore.QRect(390, 300, 93, 41))
-text_database_button.setText("فتح قاعدة\nبيانات النصوص")
-
 before_text = QTextEdit(EnteringWindow)
 before_text.setGeometry(QtCore.QRect(25, 190, 50, 26))
 before_text_label = QLabel(EnteringWindow)
@@ -284,13 +274,26 @@ last_radio.setGeometry(QtCore.QRect(440, 268,100, 16))
 last_radio.setText("آخر")
 last_radio.setLayoutDirection(QtCore.Qt.RightToLeft)
 
+input_from_folder = QPushButton(EnteringWindow)
+input_from_folder.setGeometry(QtCore.QRect(610, 300, 93, 41))
+input_from_folder.setText("المجلد الحاوي\nللملفات")
+output_from_folder = QPushButton(EnteringWindow)
+output_from_folder.setGeometry(QtCore.QRect(500, 300, 93, 41))
+output_from_folder.setText("مجلد الملفات\nبعد الإدخال")
+text_database_button = QPushButton(EnteringWindow)
+text_database_button.setGeometry(QtCore.QRect(390, 300, 93, 41))
+text_database_button.setText("فتح قاعدة\nبيانات النصوص")
+extract_database_button = QPushButton(EnteringWindow)
+extract_database_button.setGeometry(QtCore.QRect(280, 300, 93, 41))
+extract_database_button.setText("فتح قاعدة\nبيانات الاستخراج")
+
 
 #المتغيرات
 converting_database_directory = 'Scripts/Un-Converting_Database.xlsx'
 chars_width_database_directory = 'Scripts/Chars_Width_Database.xlsx'
 text_database_directory = 'جدول النصوص.xlsx'
 extracted_text_database_directory = 'النصوص المستخرجة.xlsx'
-input_folder, output_folder = 'المجلد الحاوي للملفات/', 'مجلد الاستخراج/'
+input_folder, output_folder = 'المجلد الحاوي للملفات/', 'مجلد الملفات بعد الإدخال/'
 
 if path.exists(converting_database_directory):
     import_from_converting_database(converting_database_directory)
@@ -298,47 +301,50 @@ if path.exists(chars_width_database_directory):
     import_from_width_database(chars_width_database_directory)
 
 #الدوال
-def open_textfile():
-    fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'ملف نص', '' , '*')
-    if path.exists(fileName):
-        entered_text.setPlainText(open(fileName, 'r', encoding='utf-8').read())
-        QMessageBox.about(MainWindow, "!!تهانيّ", "تم اختيار ملف النص.")
-
-def open_convert_database():
-    fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
-    global converting_database_directory
-    if path.exists(fileName) and folder != '/' and folder != converting_database_directory:
-        converting_database_directory = fileName
-        import_from_converting_database(converting_database_directory)
-        QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
-
-def open_width_database():
-    fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
-    global chars_width_database_directory
-    if path.exists(fileName) and folder != '/' and folder != chars_width_database_directory:
-        chars_width_database_directory = fileName
-        import_from_width_database(chars_width_database_directory)
-        QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
-
-def open_text_database():
-    fileName, _ = QFileDialog.getOpenFileName(EnteringWindow, 'قاعدة بيانات النص', '' , '*.xlsx')
-    global text_database_directory
-    if path.exists(fileName) and folder != '/' and folder != text_database_directory:
-        text_database_directory = fileName
-        QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
-
-def open_folder(case='input'):
-    folder = str(QFileDialog.getExistingDirectory(EnteringWindow, "Select Directory"))+'/'
-    if path.exists(folder) and folder != '/':
-        global input_folder, output_folder
-        if case == 'input':
-            if folder != input_folder:
-                input_folder = folder
-                QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
-        else:
-            if folder != output_folder:
-                output_folder = folder
-                QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
+def open_def(num):
+    if num == 0:
+        fileName, _ = QFileDialog.getOpenFileName(EnteringWindow, 'قاعدة بيانات النص', '' , '*.xlsx')
+        global text_database_directory
+        if path.exists(fileName) and fileName != '/' and fileName != text_database_directory:
+            text_database_directory = fileName
+            QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+    elif num == 1:
+        fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات التحويل', '' , '*.xlsx')
+        global converting_database_directory
+        if path.exists(fileName) and fileName != '/' and fileName != converting_database_directory:
+            converting_database_directory = fileName
+            import_from_converting_database(converting_database_directory)
+            QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+    elif num == 2:
+        fileName, _ = QFileDialog.getOpenFileName(OptionsWindow, 'قاعدة بيانات عرض الحروف', '' , '*.xlsx')
+        global chars_width_database_directory
+        if path.exists(fileName) and fileName != '/' and fileName != chars_width_database_directory:
+            chars_width_database_directory = fileName
+            import_from_width_database(chars_width_database_directory)
+            QMessageBox.about(OptionsWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+    elif num == 3:
+        fileName, _ = QFileDialog.getOpenFileName(EnteringWindow, 'قاعدة بيانات الاستخراج', '' , '*.xlsx')
+        global extracted_text_database_directory
+        if path.exists(fileName) and fileName != '/' and fileName != extracted_text_database_directory:
+            extracted_text_database_directory = fileName
+            QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار قاعدة البيانات.")
+    elif num == 4:
+        fileName, _ = QFileDialog.getOpenFileName(MainWindow, 'ملف نص', '' , '*')
+        if path.exists(fileName) and fileName != '/':
+            entered_text.setPlainText(open(fileName, 'r', encoding='utf-8').read())
+            QMessageBox.about(MainWindow, "!!تهانيّ", "تم اختيار ملف النص.")
+    elif num == 5:
+        folder = str(QFileDialog.getExistingDirectory(EnteringWindow, "Select Directory"))+'/'
+        global input_folder
+        if path.exists(folder) and folder != '/' and folder != input_folder:
+            input_folder = folder
+            QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
+    elif num == 6:
+        folder = str(QFileDialog.getExistingDirectory(EnteringWindow, "Select Directory"))+'/'
+        global output_folder
+        if path.exists(folder) and folder != '/' and folder != output_folder:
+            output_folder = folder
+            QMessageBox.about(EnteringWindow, "!!تهانيّ", "تم اختيار المجلد.")
 
 def convert(text):
     ##إلغاء العملية في حال تحقق إحدى هذه الشروط
@@ -424,8 +430,9 @@ def enter(convert_bool=True):
         QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف كل العمليات،\nالمجلد الحاوي للملفات غير موجود.")
         return
     if not path.exists(output_folder):
-        QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف كل العمليات،\nمجلد الاستخراج غير موجود.")
-        return
+        mkdir(output_folder) 
+        #QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف كل العمليات،\nمجلد الاستخراج غير موجود.")
+        #return
     files_list = listdir(input_folder)
     if len(files_list) == 0:
         QMessageBox.about(EnteringWindow, "!!خطأ", "تم إيقاف كل العمليات،\nلا توجد أي ملفات للإدخال إليها.")
@@ -539,6 +546,7 @@ def extract():
     sheet['A1'].font = Font(bold=True)
     sheet['A1'].alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
     sheet['A1'].fill = PatternFill(fill_type='solid', start_color='ff8327', end_color='ff8327')
+    sheet['B2'].value = "لا تفتح هذا الملف أثناء تشغيل الأداة."
     
     for filename in files_list:
         with open(input_folder+filename, 'r', encoding="cp437") as f:
@@ -562,20 +570,21 @@ def extract():
 
 #توصيل الإشارات
 convert_button.clicked.connect(lambda: result_text.setPlainText(convert(entered_text.toPlainText())))
-openfile_button.clicked.connect(lambda: open_textfile())
+openfile_button.clicked.connect(lambda: open_def(4))
 converting_options.triggered.connect(lambda: OptionsWindow.show())
 entering.triggered.connect(lambda: EnteringWindow.show())
 about.triggered.connect(lambda: AboutWindow.show())
 
-UC_database_button.clicked.connect(lambda: open_convert_database())
-W_database_button.clicked.connect(lambda: open_width_database())
-text_database_button.clicked.connect(lambda: open_text_database())
+text_database_button.clicked.connect(lambda: open_def(0))
+UC_database_button.clicked.connect(lambda: open_def(1))
+W_database_button.clicked.connect(lambda: open_def(2))
+extract_database_button.clicked.connect(lambda: open_def(3))
 
 enter_button.clicked.connect(lambda: enter(False))
 extract_button.clicked.connect(lambda: extract())
 convert_enter_button.clicked.connect(lambda: enter())
-input_from_folder.clicked.connect(lambda: open_folder('input'))
-output_from_folder.clicked.connect(lambda: open_folder('output'))
+input_from_folder.clicked.connect(lambda: open_def(5))
+output_from_folder.clicked.connect(lambda: open_def(6))
 
 #تشغيل البرنامج
 MainWindow.show()
