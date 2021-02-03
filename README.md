@@ -15,4 +15,4 @@ python (ويفضل دائما آخر إصدار)
 .
 
 صور للأداة:
-![1442-06-20 23_25_46-نافذة الإدخال](https://user-images.githubusercontent.com/52295461/106665418-54240780-65b7-11eb-85e0-5152ef3d6e9b.png)
+![1442-06-21 12_20_55-](https://user-images.githubusercontent.com/52295461/106733273-bfef8a00-6622-11eb-8534-db4a51ddcc33.png)
