@@ -35,10 +35,10 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
                         char_width = 0
                     if x + char_width > textzone_width:
                         if y < lines_num:
-                            new_text += new_line_com + char
+                            new_text += u'\uffff' + char
                             y += 1
                         else:
-                            new_text += new_page_com + char
+                            new_text += u'\ufffe' + char
                             y = 1
                         x = char_width
                     else:
@@ -47,10 +47,10 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
         else:
             if x + item_width > textzone_width:
                 if y < lines_num:
-                    new_text += new_line_com
+                    new_text += u'\uffff'
                     y += 1
                 else:
-                    new_text += new_page_com
+                    new_text += u'\ufffe'
                     y = 1
                 x = 0
                 for char in text:
@@ -117,24 +117,23 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
         text_list = [text]
     
     for _ in range(len(text_list)):
-        if _ < len(text_list): new_text += ' '
         if _%2 == 0:
             min_text_list = text_list[_].split(" ")
+            print(min_text_list)
             
             for i in range(len(min_text_list)):
                 x, y, new_text = fit(min_text_list[i], x, y, new_text)
+                if _ < len(text_list): new_text += ' '
         else:
             new_text +=  start_command + text_list[_] + end_command
 
     if new_page_com != '': 
-        new_text = new_text.replace(u'\ufffe', new_page_com)
-        new_text = new_text.replace(" "+new_page_com, new_page_com).replace(new_page_com+" ", new_page_com)
+        new_text = new_text.replace(u'\ufffe', new_page_com).replace(" "+new_page_com, new_page_com).replace(new_page_com+" ", new_page_com)
     else:
         if new_line_com != '': 
             new_text = new_text.replace(u'\ufffe', new_line_com)
         
     if new_line_com != '': 
-        new_text = new_text.replace(u'\uffff', new_line_com)
-        new_text = new_text.replace(" "+new_line_com, new_line_com).replace(new_line_com+" ", new_line_com)
+        new_text = new_text.replace(u'\uffff', new_line_com).replace(" "+new_line_com, new_line_com).replace(new_line_com+" ", new_line_com)
     
     return new_text

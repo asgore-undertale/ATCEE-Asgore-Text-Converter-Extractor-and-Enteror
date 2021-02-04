@@ -37,7 +37,6 @@ def Extract(text, case = True, before = '', after = '', mini = False, maxi = Fal
             before = before.replace(char, '\\'+char)
             after = after.replace(char, '\\'+char)
         pattern = before + "(.*?)" + after
-    
         extracted_list = re.findall(pattern, text)
     
     if mini != False or mini != False:
