@@ -110,12 +110,9 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
     for _ in range(len(text_list)):
         if _%2 == 0:
             min_text_list = text_list[_].split(" ")
-            print(min_text_list)
-            
             for i in range(len(min_text_list)):
+                if i < len(min_text_list)-1: min_text_list[i] += ' '
                 x, y, new_text = fit(min_text_list[i], x, y, new_text)
-                if _ < len(text_list): new_text += ' '
-                if ' ' in chars_width_dic: x += chars_width_dic[' ']
         else:
             new_text +=  start_command + text_list[_] + end_command
 
