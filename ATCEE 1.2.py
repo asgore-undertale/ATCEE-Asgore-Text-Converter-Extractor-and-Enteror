@@ -19,6 +19,7 @@ from OtherScripts.Bmfont_to_FIB_Table import BMFont_to_FIB
 
 ##
 app = QApplication(argv)
+Windows()
 
 #المتغيرات
 converting_database_directory = 'ConvertingScripts/Un-Converting_Database.xlsx'
@@ -34,8 +35,6 @@ if path.exists(converting_database_directory):
     convert_database = Take_From_Table(converting_database_directory)
 if path.exists(chars_width_database_directory):
     fit_database = Take_From_Table(chars_width_database_directory)
-
-Windows()
 
 #الدوال
 def BMFont_to_FIB_def():
