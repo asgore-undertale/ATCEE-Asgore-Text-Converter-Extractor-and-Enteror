@@ -27,19 +27,35 @@ chars_width_database_directory = 'ConvertingScripts/Chars_Width_Database.xlsx'
 text_database_directory = 'TextTable.xlsx'
 extracted_text_database_directory = 'ExtractedTextTable.xlsx'
 input_folder, output_folder = '_FilesFolder/', '_After-enteringFolder/'
+cell_byte = True
 
-convert_database = {}
-fit_database = {}
-
-if path.exists(converting_database_directory):
-    convert_database = Take_From_Table(converting_database_directory)
-if path.exists(chars_width_database_directory):
-    fit_database = Take_From_Table(chars_width_database_directory)
+if path.exists(converting_database_directory): convert_database = Take_From_Table(converting_database_directory)
+else: convert_database = {}
+if path.exists(chars_width_database_directory): fit_database = Take_From_Table(chars_width_database_directory)
+else: fit_database = {}
 
 #الدوال
 def BMFont_to_FIB_def():
     BMFont_to_FIB(Windows.BMFont_File.toPlainText() , Windows.FIB_Table.toPlainText())
     QMessageBox.about(Windows.EnteringWindow, "!!تهانيّ", "انتهى العملية.")
+
+def cell_bytes():
+    if '[b]' in Windows.start_command.toPlainText(): cell_bytes._start_command = bytearray.fromhex(Windows.start_command.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._start_command = Windows.start_command.toPlainText()
+    if '[b]' in Windows.end_command.toPlainText(): cell_bytes._end_command = bytearray.fromhex(Windows.end_command.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._end_command = Windows.end_command.toPlainText()
+    if '[b]' in Windows.page_command.toPlainText(): cell_bytes._page_command = bytearray.fromhex(Windows.page_command.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._page_command = Windows.page_command.toPlainText()
+    if '[b]' in Windows.line_command.toPlainText(): cell_bytes._line_command = bytearray.fromhex(Windows.line_command.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._line_command = Windows.line_command.toPlainText()
+    if '[b]' in Windows.textzone_width.toPlainText(): cell_bytes._textzone_width = bytearray.fromhex(Windows.textzone_width.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._textzone_width = Windows.textzone_width.toPlainText()
+    if '[b]' in Windows.textzone_lines.toPlainText(): cell_bytes._textzone_lines = bytearray.fromhex(Windows.textzone_lines.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._textzone_lines = Windows.textzone_lines.toPlainText()
+    if '[b]' in Windows.before_text_convert.toPlainText(): cell_bytes._before_text_convert = bytearray.fromhex(Windows.before_text_convert.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._before_text_convert = Windows.before_text_convert.toPlainText()
+    if '[b]' in Windows.after_text_convert.toPlainText(): cell_bytes._after_text_convert = bytearray.fromhex(Windows.after_text_convert.toPlainText().replace('[b]', '')).decode()
+    else: cell_bytes._after_text_convert = Windows.after_text_convert.toPlainText()
 
 def open_def(num):
     if num == 0:
@@ -89,45 +105,26 @@ def open_def(num):
 def convert(text):
     ##إلغاء العملية في حال تحقق إحدى هذه الشروط
     if text == '': return
-    if Windows.C_check.isChecked() or Windows.UC_check.isChecked():
-        if not path.exists(converting_database_directory):
-            QMessageBox.about(Windows.MainWindow, "!!خطأ", "قاعدة بيانات التحويل غير موجودة،\nتم إيقاف كل العمليات.")
-            return
-    if Windows.FIB_check.isChecked():
-        if not path.exists(chars_width_database_directory):
-            QMessageBox.about(Windows.MainWindow, "!!خطأ", "قاعدة بيانات عرض الحروف غير موجودة،\nتم إيقاف كل العمليات.")
-            return
-    ##
+    if (Windows.C_check.isChecked() or Windows.UC_check.isChecked()) and not path.exists(converting_database_directory):
+        QMessageBox.about(Windows.MainWindow, "!!خطأ", "قاعدة بيانات التحويل غير موجودة،\nتم إيقاف كل العمليات.")
+        return
+    if Windows.FIB_check.isChecked() and not path.exists(chars_width_database_directory):
+        QMessageBox.about(Windows.MainWindow, "!!خطأ", "قاعدة بيانات عرض الحروف غير موجودة،\nتم إيقاف كل العمليات.")
+        return
     
     ##المتغيرات
+    if cell_byte == True: cell_bytes()
     if Windows.Slash_check.isChecked():
-        _start_command = Windows.start_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
-        _end_command = Windows.end_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
-        _page_command = Windows.page_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
-        _line_command = Windows.line_command.toPlainText().replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
-    else:
-        _start_command = Windows.start_command.toPlainText()
-        _end_command = Windows.end_command.toPlainText()
-        _page_command = Windows.page_command.toPlainText()
-        _line_command = Windows.line_command.toPlainText()
-    
-    if '[b]' in _start_command: _start_command = bytearray.fromhex(_start_command.replace('[b]', '')).decode()
-    if '[b]' in _end_command: _end_command = bytearray.fromhex(_end_command.replace('[b]', '')).decode()
-    if '[b]' in _page_command: _page_command = bytearray.fromhex(_page_command.replace('[b]', '')).decode()
-    if '[b]' in _line_command: _line_command = bytearray.fromhex(_line_command.replace('[b]', '')).decode()
-    if '[b]' in Windows.textzone_width.toPlainText(): _textzone_width = bytearray.fromhex(Windows.textzone_width.toPlainText().replace('[b]', '')).decode()
-    else: _textzone_width = Windows.textzone_width.toPlainText()
-    if '[b]' in Windows.textzone_lines.toPlainText(): _textzone_width = bytearray.fromhex(Windows.textzone_lines.toPlainText().replace('[b]', '')).decode()
-    else: _textzone_lines = Windows.textzone_lines.toPlainText()
-    if '[b]' in Windows.before_text_convert.toPlainText(): _before_text_convert = bytearray.fromhex(Windows.before_text_convert.toPlainText().replace('[b]', '')).decode()
-    else: _before_text_convert = Windows.before_text_convert.toPlainText()
-    if '[b]' in Windows.after_text_convert.toPlainText(): _after_text_convert = bytearray.fromhex(Windows.after_text_convert.toPlainText().replace('[b]', '')).decode()
-    else: _after_text_convert = Windows.after_text_convert.toPlainText()
-    
+        cell_bytes._start_command = cell_bytes._start_command.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        cell_bytes._end_command = cell_bytes._end_command.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        cell_bytes._page_command = cell_bytes._page_command.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        cell_bytes._line_command = cell_bytes._line_command.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        cell_bytes._before_text_convert = cell_bytes._before_text_convert.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
+        cell_bytes._after_text_convert = cell_bytes._after_text_convert.replace(u'\u005c\u006e', '\n').replace(u'\u005c\u0074', '\t').replace(u'\u005c\u0072', '\r').replace(u'\u005c\u0061', '\a')
     ##
     
     if Windows.Ext_check.isChecked():#Extract from text
-        if _before_text_convert == '' or _after_text_convert == '':
+        if cell_bytes._before_text_convert == '' or cell_bytes._after_text_convert == '':
             QMessageBox.about(Windows.EnteringWindow, "!!خطأ", "تم إيقاف العملية،\nاملأ حقلي: ما قبل النصوص، ما بعدها.\nعلى الأقل للاستخراج.")
             return
         
@@ -144,41 +141,23 @@ def convert(text):
             QMessageBox.about(Windows.EnteringWindow, "!!خطأ", "لا يمكن أن يكون قصر النصوص أطول من طولها.")
             return
         
-        text = Extract(text, True, _before_text_convert, _after_text_convert, mini, maxi)
+        text = Extract(text, True, cell_bytes._before_text_convert, cell_bytes._after_text_convert, mini, maxi)
         text = '\n'.join(text)
     
-    if Windows.DDL_check.isChecked():#Delete Duplicated lines
-        text = DDL(text)
-    
-    if Windows.SSL_check.isChecked():#Sort short to long
-        text = Sort(text)
-    
-    if Windows.SLS_check.isChecked():#Sort long to short
-        text = Sort(text, False)
-    
-    if Windows.RA_check.isChecked() or Windows.C_check.isChecked() or Windows.FIB_check.isChecked():#Reshape Arabic
-        text = Reshape(text)
-        
+    if Windows.DDL_check.isChecked(): text = DDL(text)#Delete Duplicated lines
+    if Windows.SSL_check.isChecked(): text = Sort(text)#Sort short to long
+    if Windows.SLS_check.isChecked(): text = Sort(text, False)#Sort long to short
+    if Windows.RA_check.isChecked() or Windows.C_check.isChecked() or Windows.FIB_check.isChecked(): text = Reshape(text)#Reshape Arabic
     if Windows.FIB_check.isChecked():#Fit in box
         if _textzone_width != '' and _textzone_lines != '':
-            text = fit_in_box(text, fit_database, int(_textzone_width), int(_textzone_lines), _line_command, _page_command, _start_command, _end_command)
+            text = fit_in_box(text, fit_database, int(cell_bytes._textzone_width), int(cell_bytes._textzone_lines), cell_bytes._line_command, cell_bytes._page_command, cell_bytes._start_command, cell_bytes._end_command)
         else:
-            QMessageBox.about(EnteringWindow, "!!خطأ", "املأ حقلي: عرض المربع، عدد سطور المربع.")
-
-    if Windows.C_check.isChecked():#Convert
-        text = Convert(text, convert_database, True, _start_command, _end_command)
-    
-    if Windows.UC_check.isChecked():#Unconvert
-        text = Convert(text, convert_database, False, _start_command, _end_command)
-        
-    if Windows.UA_check.isChecked() or Windows.UC_check.isChecked():#Unshape Arabic
-        text = Reshape(text, False)
-        
-    if Windows.RT_check.isChecked():#Reverse whole text
-        text = Reverse(text, _start_command, _end_command, _page_command, _line_command)
-        
-    if Windows.RAO_check.isChecked():#‫Reverse Arabic only
-        text = Reverse(text, _start_command, _end_command, _page_command, _line_command, False)
+            QMessageBox.about(Windows.EnteringWindow, "!!خطأ", "املأ حقلي: عرض المربع، عدد سطور المربع.")
+    if Windows.C_check.isChecked(): text = Convert(text, convert_database, True, cell_bytes._start_command, cell_bytes._end_command)#Convert
+    if Windows.UC_check.isChecked(): text = Convert(text, convert_database, False, cell_bytes._start_command, cell_bytes._end_command)#Unconvert
+    if Windows.UA_check.isChecked() or Windows.UC_check.isChecked(): text = Reshape(text, False)#Unshape Arabic
+    if Windows.RT_check.isChecked(): text = Reverse(text, cell_bytes._start_command, cell_bytes._end_command, cell_bytes._page_command, cell_bytes._line_command)#Reverse whole text
+    if Windows.RAO_check.isChecked(): text = Reverse(text, cell_bytes._start_command, cell_bytes._end_command, cell_bytes._page_command, cell_bytes._line_command, False)#‫Reverse Arabic only
     return text
 
 def enter(convert_bool = True):
@@ -189,6 +168,9 @@ def enter(convert_bool = True):
     found_list = []
     no_found_log = ''
     too_long_log = ''
+    cell_byte = False
+    ##
+    cell_bytes()
     
     ##إلغاء العملية في حال تحقق إحدى هذه الشروط
     if Windows.C_check.isChecked() or Windows.UC_check.isChecked():
@@ -286,6 +268,7 @@ def enter(convert_bool = True):
         msg.setWindowTitle("أطول من النصوص الأصلية")
         msg.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse);
         msg.exec_()
+    cell_bytes = True
 
 def extract():
     before = Windows.before_text.toPlainText()
