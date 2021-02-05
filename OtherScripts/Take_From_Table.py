@@ -98,7 +98,7 @@ def Take_From_Table(database_directory):
             chars_table['ﻃ'] = database['B'+str(row)].value
         elif database['A'+str(row)].value == 'ظ':
             chars_table['ﻅ'] = database['E'+str(row)].value
-            chars_table['ﻅ'] = database['D'+str(row)].value
+            chars_table['ﻆ'] = database['D'+str(row)].value
             chars_table['ﻈ'] = database['C'+str(row)].value
             chars_table['ﻇ'] = database['B'+str(row)].value
         elif database['A'+str(row)].value == 'ع':

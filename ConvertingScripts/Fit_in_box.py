@@ -27,23 +27,20 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
                     new_text += u'\ufffe'
                 else:
                     if char in chars_width_dic:
-                        char_width = chars_width_dic[char]
-                        if char_width > textzone_width:
+                        if chars_width_dic[char] > textzone_width:
                             print(char + ' is wider than text zone')
                             continue
-                    else:
-                        char_width = 0
-                    if x + char_width > textzone_width:
+                    if x + chars_width_dic[char] > textzone_width:
                         if y < lines_num:
                             new_text += u'\uffff' + char
                             y += 1
                         else:
                             new_text += u'\ufffe' + char
                             y = 1
-                        x = char_width
+                        x = chars_width_dic[char]
                     else:
                         new_text += char
-                        x += char_width
+                        x += chars_width_dic[char]
         else:
             if x + item_width > textzone_width:
                 if y < lines_num:
@@ -66,14 +63,11 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
                         new_text += u'\ufffe'
                     else:
                         if char in chars_width_dic:
-                            char_width = chars_width_dic[char]
-                            if char_width > textzone_width:
+                            if chars_width_dic[char] > textzone_width:
                                 print(char + 'is wider than text zone')
                                 continue
-                        else:
-                            char_width = 0
+                            x += chars_width_dic[char]
                         new_text += char
-                        x += char_width
             else:
                 for char in text:
                     if char == u'\uffff':
@@ -88,14 +82,11 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
                         new_text += u'\ufffe'
                     else:
                         if char in chars_width_dic:
-                            char_width = chars_width_dic[char]
-                            if char_width > textzone_width:
+                            if chars_width_dic[char] > textzone_width:
                                 print(char + 'is wider than text zone')
                                 continue
-                        else:
-                            char_width = 0
+                            x += chars_width_dic[char]
                         new_text += char
-                        x += char_width
         return x, y, new_text
     
     if new_line_com != '': text = text.replace(new_line_com, u'\uffff')#so please do not use u'\uffff' in your text
@@ -124,6 +115,7 @@ def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = 
             for i in range(len(min_text_list)):
                 x, y, new_text = fit(min_text_list[i], x, y, new_text)
                 if _ < len(text_list): new_text += ' '
+                if ' ' in chars_width_dic: x += chars_width_dic[' ']
         else:
             new_text +=  start_command + text_list[_] + end_command
 
