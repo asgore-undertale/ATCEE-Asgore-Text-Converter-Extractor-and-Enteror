@@ -168,7 +168,7 @@ def Windows():
     #النافذة الرئيسية
     Windows.MainWindow = QMainWindow()
     Windows.MainWindow.setFixedSize(756, 344)
-    Windows.MainWindow.setWindowTitle("ATCEE 1.2v")
+    Windows.MainWindow.setWindowTitle("ATCEE 1.3v")
 
     Windows.result_text = QTextEdit(Windows.MainWindow)
     Windows.result_text.setGeometry(QtCore.QRect(13, 62, 301, 253))
