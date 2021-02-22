@@ -1,5 +1,5 @@
 #استيراد المكتبات
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
 from PyQt5.QtCore import Qt
 from sys import argv, exit
 from os import path, listdir, mkdir, makedirs, walk
@@ -161,8 +161,7 @@ def convert(text):
     if Windows.RAO_check.isChecked(): text = Reverse(text, cell_bytes._start_command, cell_bytes._end_command, cell_bytes._page_command, cell_bytes._line_command, False)#‫Reverse Arabic only
     return text
 
-def dir_list(path):
-    return [root+'/'+'{}{}'.format('', f) for root, dirs, files in walk(path) for f in files]
+def dir_list(path): return [root+'/'+'{}{}'.format('', f) for root, dirs, files in walk(path) for f in files]
 
 def enter(convert_bool = True):
     ##المتغيرات
@@ -205,11 +204,12 @@ def enter(convert_bool = True):
             original_cell_value = text_table['A'+str(cell)].value
             translate_cell_value = text_table['B'+str(cell)].value
             
-            if original_cell_value in text_dic:
-                if text_dic[original_cell_value] == '' or text_dic[original_cell_value] == None:
+            if original_cell_value != '' and original_cell_value != None and translate_cell_value != '' and translate_cell_value != None:
+                if original_cell_value in text_dic:
+                    if text_dic[original_cell_value] == '' or text_dic[original_cell_value] == None:
+                        text_dic[original_cell_value] = translate_cell_value
+                else:
                     text_dic[original_cell_value] = translate_cell_value
-            else:
-                text_dic[original_cell_value] = translate_cell_value
         
         new_d = {}
         for k in sorted(text_dic, key=len, reverse=True):
@@ -315,7 +315,7 @@ def extract():
         row += 1
         print(row)
     '''
-    sheet.delete_cols(1)
+    sheet.delete_cols(1, 2)
     sheet['A1'].value = "النص الأصلي"
     sheet['A1'].font = Font(bold=True)
     sheet['A1'].alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
@@ -327,18 +327,20 @@ def extract():
         with open(filename, 'r', encoding="cp437") as f:
             file_content = f.read()
         
-        sheet['A'+str(row)].value = filename
-        sheet['A'+str(row)].font = Font(bold=True)
-        sheet['A'+str(row)].alignment = Alignment(vertical='center', wrap_text=True)
-        sheet['A'+str(row)].fill = PatternFill(fill_type='solid', start_color='D112D1', end_color='D112D1')
-        row += 1
-        
         extracted = Extract(file_content, True, before, after, mini, maxi)
-        '''map(put_in_sheet, extracted)'''
-        for item in extracted:
-            sheet['A'+str(row)].font = Font(bold=False)
-            sheet['A'+str(row)].value = item
+        
+        if len(extracted) != 0:
+            sheet['A'+str(row)].value = filename
+            sheet['A'+str(row)].font = Font(bold=True)
+            sheet['A'+str(row)].alignment = Alignment(vertical='center', wrap_text=True)
+            sheet['A'+str(row)].fill = PatternFill(fill_type='solid', start_color='D112D1', end_color='D112D1')
             row += 1
+            
+            '''map(put_in_sheet, extracted)'''
+            for item in extracted:
+                sheet['A'+str(row)].font = Font(bold=False)
+                sheet['A'+str(row)].value = item
+                row += 1
     
     extracted_xlsx.save(extracted_text_database_directory)
     QMessageBox.about(Windows.EnteringWindow, "!!تهانيّ", "انتهى الاستخراج.")
