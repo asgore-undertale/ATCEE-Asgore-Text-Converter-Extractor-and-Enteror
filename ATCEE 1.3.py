@@ -150,7 +150,7 @@ def convert(text):
     if Windows.SLS_check.isChecked(): text = Sort(text, False)#Sort long to short
     if Windows.RA_check.isChecked() or Windows.C_check.isChecked() or Windows.FIB_check.isChecked(): text = Reshape(text)#Reshape Arabic
     if Windows.FIB_check.isChecked():#Fit in box
-        if _textzone_width != '' and _textzone_lines != '':
+        if cell_bytes._textzone_width != '' and cell_bytes._textzone_lines != '':
             text = fit_in_box(text, fit_database, int(cell_bytes._textzone_width), int(cell_bytes._textzone_lines), cell_bytes._line_command, cell_bytes._page_command, cell_bytes._start_command, cell_bytes._end_command)
         else:
             QMessageBox.about(Windows.EnteringWindow, "!!خطأ", "املأ حقلي: عرض المربع، عدد سطور المربع.")
