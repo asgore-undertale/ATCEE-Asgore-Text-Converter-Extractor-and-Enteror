@@ -1,44 +1,47 @@
 letters_Table = {'''  '<initial>' '<medial>' '<final>' '<isolated>' '''
-                    "ء" : [u"\ufe80", u"\ufe80", u"\ufe80", u"\ufe80"], #ء  Xإن محيت الهمزة من هنا فستحدث مشكلة
-                    "آ" : [u"\ufe81", u"\ufe82", u"\ufe82", u"\ufe81"], #آ
-                    "أ" : [u"\ufe83", u"\ufe84", u"\ufe84", u"\ufe83"], #أ
-                    "ؤ" : [u"\ufe85", u"\ufe86", u"\ufe86", u"\ufe85"], #ؤ
-                    "إ" : [u"\ufe87", u"\ufe88", u"\ufe88", u"\ufe87"], #إ
-                    "ئ" : [u"\ufe8b", u"\ufe8c", u"\ufe8a", u"\ufe89"], #ئ
-                    "ا" : [u"\ufe8d", u"\ufe8e", u"\ufe8e", u"\ufe8d"], #ا
-                    "ب" : [u"\ufe91", u"\ufe92", u"\ufe90", u"\ufe8f"], #ب
-                    "ة" : [u"\ufe93", u"\ufe94", u"\ufe94", u"\ufe93"], #ة
-                    "ت" : [u"\ufe97", u"\ufe98", u"\ufe96", u"\ufe95"], #ت
-                    "ث" : [u"\ufe9b", u"\ufe9c", u"\ufe9a", u"\ufe99"], #ث
-                    "ج" : [u"\ufe9f", u"\ufea0", u"\ufe9e", u"\ufe9d"], #ج
-                    "ح" : [u"\ufea3", u"\ufea4", u"\ufea2", u"\ufea1"], #ح
-                    "خ" : [u"\ufea7", u"\ufea8", u"\ufea6", u"\ufea5"], #خ
-                    "د" : [u"\ufea9", u"\ufeaa", u"\ufeaa", u"\ufea9"], #د
-                    "ذ" : [u"\ufeab", u"\ufeac", u"\ufeac", u"\ufeab"], #ذ
-                    "ر" : [u"\ufead", u"\ufeae", u"\ufeae", u"\ufead"], #ر
-                    "ز" : [u"\ufeaf", u"\ufeb0", u"\ufeb0", u"\ufeaf"], #ز
-                    "س" : [u"\ufeb3", u"\ufeb4", u"\ufeb2", u"\ufeb1"], #س
-                    "ش" : [u"\ufeb7", u"\ufeb8", u"\ufeb6", u"\ufeb5"], #ش
-                    "ص" : [u"\ufebb", u"\ufebc", u"\ufeba", u"\ufeb9"], #ص
-                    "ض" : [u"\ufebf", u"\ufec0", u"\ufebe", u"\ufebd"], #ض
-                    "ط" : [u"\ufec3", u"\ufec4", u"\ufec2", u"\ufec1"], #ط
-                    "ظ" : [u"\ufec7", u"\ufec8", u"\ufec6", u"\ufec5"], #ظ
-                    "ع" : [u"\ufecb", u"\ufecc", u"\ufeca", u"\ufec9"], #ع
-                    "غ" : [u"\ufecf", u"\ufed0", u"\ufece", u"\ufecd"], #غ
-                    "ف" : [u"\ufed3", u"\ufed4", u"\ufed2", u"\ufed1"], #ف
-                    "ق" : [u"\ufed7", u"\ufed8", u"\ufed6", u"\ufed5"], #ق
-                    "ك" : [u"\ufedb", u"\ufedc", u"\ufeda", u"\ufed9"], #ك
-                    "ل" : [u"\ufedf", u"\ufee0", u"\ufede", u"\ufedd"], #ل
-                    "م" : [u"\ufee3", u"\ufee4", u"\ufee2", u"\ufee1"], #م
-                    "ن" : [u"\ufee7", u"\ufee8", u"\ufee6", u"\ufee5"], #ن
-                    "ه" : [u"\ufeeb", u"\ufeec", u"\ufeea", u"\ufee9"], #ه
-                    "و" : [u"\ufeed", u"\ufeee", u"\ufeee", u"\ufeed"], #و
-                    "ى" : [u"\ufeef", u"\ufef0", u"\ufef0", u"\ufeef"], #ى
-                    "ي" : [u"\ufef3", u"\ufef4", u"\ufef2", u"\ufef1"], #ي
-                    "لآ" : [u"\ufef5", u"\ufef6", u"\ufef6", u"\ufef5"], #لآ
-                    "لأ" : [u"\ufef7", u"\ufef8", u"\ufef8", u"\ufef7"], #لأ
-                    "لإ" : [u"\ufef9", u"\ufefa", u"\ufefa", u"\ufef9"], #لإ
-                    "لا" : [u"\ufefb", u"\ufefc", u"\ufefc", u"\ufefb"], #لا
+                    "ء" : [u"\ufe80", u"\ufe80", u"\ufe80", u"\ufe80"], #Xإن محيت الهمزة من هنا فستحدث مشكلة
+                    "آ" : [u"\ufe81", u"\ufe82", u"\ufe82", u"\ufe81"],
+                    "أ" : [u"\ufe83", u"\ufe84", u"\ufe84", u"\ufe83"],
+                    "ؤ" : [u"\ufe85", u"\ufe86", u"\ufe86", u"\ufe85"],
+                    "إ" : [u"\ufe87", u"\ufe88", u"\ufe88", u"\ufe87"],
+                    "ئ" : [u"\ufe8b", u"\ufe8c", u"\ufe8a", u"\ufe89"],
+                    "ا" : [u"\ufe8d", u"\ufe8e", u"\ufe8e", u"\ufe8d"],
+                    "ب" : [u"\ufe91", u"\ufe92", u"\ufe90", u"\ufe8f"],
+                    "ة" : [u"\ufe93", u"\ufe94", u"\ufe94", u"\ufe93"],
+                    "ت" : [u"\ufe97", u"\ufe98", u"\ufe96", u"\ufe95"],
+                    "ث" : [u"\ufe9b", u"\ufe9c", u"\ufe9a", u"\ufe99"],
+                    "ج" : [u"\ufe9f", u"\ufea0", u"\ufe9e", u"\ufe9d"],
+                    "ح" : [u"\ufea3", u"\ufea4", u"\ufea2", u"\ufea1"],
+                    "خ" : [u"\ufea7", u"\ufea8", u"\ufea6", u"\ufea5"],
+                    "د" : [u"\ufea9", u"\ufeaa", u"\ufeaa", u"\ufea9"],
+                    "ذ" : [u"\ufeab", u"\ufeac", u"\ufeac", u"\ufeab"],
+                    "ر" : [u"\ufead", u"\ufeae", u"\ufeae", u"\ufead"],
+                    "ز" : [u"\ufeaf", u"\ufeb0", u"\ufeb0", u"\ufeaf"],
+                    "س" : [u"\ufeb3", u"\ufeb4", u"\ufeb2", u"\ufeb1"],
+                    "ش" : [u"\ufeb7", u"\ufeb8", u"\ufeb6", u"\ufeb5"],
+                    "ص" : [u"\ufebb", u"\ufebc", u"\ufeba", u"\ufeb9"],
+                    "ض" : [u"\ufebf", u"\ufec0", u"\ufebe", u"\ufebd"],
+                    "ط" : [u"\ufec3", u"\ufec4", u"\ufec2", u"\ufec1"],
+                    "ظ" : [u"\ufec7", u"\ufec8", u"\ufec6", u"\ufec5"],
+                    "ع" : [u"\ufecb", u"\ufecc", u"\ufeca", u"\ufec9"],
+                    "غ" : [u"\ufecf", u"\ufed0", u"\ufece", u"\ufecd"],
+                    "ف" : [u"\ufed3", u"\ufed4", u"\ufed2", u"\ufed1"],
+                    "ق" : [u"\ufed7", u"\ufed8", u"\ufed6", u"\ufed5"],
+                    "ك" : [u"\ufedb", u"\ufedc", u"\ufeda", u"\ufed9"],
+                    "ل" : [u"\ufedf", u"\ufee0", u"\ufede", u"\ufedd"],
+                    "م" : [u"\ufee3", u"\ufee4", u"\ufee2", u"\ufee1"],
+                    "ن" : [u"\ufee7", u"\ufee8", u"\ufee6", u"\ufee5"],
+                    "ه" : [u"\ufeeb", u"\ufeec", u"\ufeea", u"\ufee9"],
+                    "و" : [u"\ufeed", u"\ufeee", u"\ufeee", u"\ufeed"],
+                    "ى" : [u"\ufeef", u"\ufef0", u"\ufef0", u"\ufeef"],
+                    "ي" : [u"\ufef3", u"\ufef4", u"\ufef2", u"\ufef1"],
+                    "لآ" : [u"\ufef5", u"\ufef6", u"\ufef6", u"\ufef5"],
+                    "لأ" : [u"\ufef7", u"\ufef8", u"\ufef8", u"\ufef7"],
+                    "لإ" : [u"\ufef9", u"\ufefa", u"\ufefa", u"\ufef9"],
+                    "لا" : [u"\ufefb", u"\ufefc", u"\ufefc", u"\ufefb"],
+                    "پ" : [u"\ufb58", u"\ufb59", u"\ufb57", u"\ufb56"],
+                    "چ" : [u"\ufb7c", u"\ufb7d", u"\ufb7b", u"\ufb7a"],
+                    "ڤ" : [u"\ufb6c", u"\ufb6d", u"\ufb6b", u"\ufb6a"],
     }
 
 def Reshape(text, case = True):
