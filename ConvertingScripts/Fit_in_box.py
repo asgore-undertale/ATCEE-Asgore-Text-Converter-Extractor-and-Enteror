@@ -1,128 +1,85 @@
 import re
 
-def fit_in_box(text, chars_width_dic, textzone_width, lines_num, new_line_com = '\n', new_page_com = '\n\n', start_command = '[', end_command = ']'):
-    new_text = ""
-    x, y = 0, 1
-    
-    def fit(text, x, y, new_text):
-        item_width = 0
-        for char in text:
-            if char in chars_width_dic:
-                item_width += chars_width_dic[char]
-            else:
-                if char != u'\uffff' and char != u'\ufffe':
-                    print('"'+char+'" in not in dictionary.')
-        
-        if item_width > textzone_width:
-            for char in text:
-                if char == u'\uffff':
-                    if y < lines_num:
-                        y += 1
-                        new_text += u'\uffff'
-                    else:
-                        y = 1
-                        new_text += u'\ufffe'
-                elif char == u'\ufffe':
-                    y = 1
-                    new_text += u'\ufffe'
-                else:
-                    if char in chars_width_dic:
-                        if chars_width_dic[char] > textzone_width:
-                            print(char + ' is wider than text zone')
-                            continue
-                    if x + chars_width_dic[char] > textzone_width:
-                        if y < lines_num:
-                            new_text += u'\uffff' + char
-                            y += 1
-                        else:
-                            new_text += u'\ufffe' + char
-                            y = 1
-                        x = chars_width_dic[char]
-                    else:
-                        new_text += char
-                        x += chars_width_dic[char]
-        else:
-            if x + item_width > textzone_width:
-                if y < lines_num:
-                    new_text += u'\uffff'
-                    y += 1
-                else:
-                    new_text += u'\ufffe'
-                    y = 1
-                x = 0
-                for char in text:
-                    if char == u'\uffff':
-                        if y < lines_num:
-                            y += 1
-                            new_text += u'\uffff'
-                        else:
-                            y = 1
-                            new_text += u'\ufffe'
-                    elif char == u'\ufffe':
-                        y = 1
-                        new_text += u'\ufffe'
-                    else:
-                        if char in chars_width_dic:
-                            if chars_width_dic[char] > textzone_width:
-                                print(char + 'is wider than text zone')
-                                continue
-                            x += chars_width_dic[char]
-                        new_text += char
-            else:
-                for char in text:
-                    if char == u'\uffff':
-                        if y < lines_num:
-                            y += 1
-                            new_text += u'\uffff'
-                        else:
-                            y = 1
-                            new_text += u'\ufffe'
-                    elif char == u'\ufffe':
-                        y = 1
-                        new_text += u'\ufffe'
-                    else:
-                        if char in chars_width_dic:
-                            if chars_width_dic[char] > textzone_width:
-                                print(char + 'is wider than text zone')
-                                continue
-                            x += chars_width_dic[char]
-                        new_text += char
-        return x, y, new_text
-    
-    if new_line_com != '': text = text.replace(new_line_com, u'\uffff')#so please do not use u'\uffff' in your text
-    if new_page_com != '': text = text.replace(new_page_com, u'\ufffe')#u'\ufffe' too
-    
-    if new_line_com != '\n' and new_page_com != '\n' and start_command != '\n' and end_command != '\n':
-        text = text.replace('\n', ' ')
-    
-    if start_command != '' and end_command != '':
-        commands_chars = '.[]{}*+?()^'
-        re_start_command = start_command
-        re_end_command = end_command
-        for char in commands_chars:
-            re_start_command = re_start_command.replace(char, '\\'+char)
-            re_end_command = re_end_command.replace(char, '\\'+char)
-        pattern = re_start_command + "(.*?)" + re_end_command
-        text_list = re.split(pattern, text)
+def increase_y(y : int):
+    if y == fit.lines_num - 1:
+        fit.newtext += fit.newpage
+        return 0
     else:
-        text_list = [text]
-    
-    for _ in range(len(text_list)):
-        if _%2 == 0:
-            min_text_list = text_list[_].split(" ")
-            for i in range(len(min_text_list)):
-                if i < len(min_text_list)-1: min_text_list[i] += ' '
-                x, y, new_text = fit(min_text_list[i], x, y, new_text)
-        else:
-            new_text +=  start_command + text_list[_] + end_command
+        fit.newtext += fit.newline
+        return y + 1
 
-    if new_page_com != '': 
-        new_text = new_text.replace(u'\ufffe', new_page_com).replace(" "+new_page_com, new_page_com).replace(new_page_com+" ", new_page_com)
+def handle_xy(x : int, y : int, char : str):
+    if x + fit.charmap[char] > fit.textzone_width:
+        x = fit.charmap[char]
+        y = increase_y(y)
     else:
-        if new_line_com != '': 
-            new_text = new_text.replace(u'\ufffe', new_line_com)
-        
-    if new_line_com != '': 
-        new_text = new_text.replace(u'\uffff', new_line_com).replace(" "+new_line_com, new_line_com).replace(new_line_com+" ", new_line_com)
+        x += fit.charmap[char]
+    return x, y
+
+def check(char : str):
+    if char == fit.newline:
+        fit.newtext += fit.newline
+        x, y = 0, increase_y(y)
+    elif char == fit.newpage:
+        fit.newtext += fit.newpage
+        x, y = 0, 0
+    if char not in fit.charmap:
+        print(f'{char} not in fit.charmap.')
+        return True
+    if fit.charmap[char] > fit.textzone_width:
+        print(f'{char} is wider than Textzone.')
+        return True
+
+def width(text : str):
+    width = 0
+    for char in text:
+        if check(char): continue
+        width += fit.charmap[char]
+    return width
+
+def split_handling(text : str, before_command : str, after_command : str, case : bool):
+    if case:
+        if before_command and after_command:
+            commands_chars = '.[]{}*+?()^'
+            for char in commands_chars:
+                before_command = before_command.replace(char, '\\'+char)
+                after_command = after_command.replace(char, '\\'+char)
+            text_list = re.split(before_command + "(.*?)" + after_command, text)
+        else: text_list = [text]
+    else:
+        text_list = text.split(' ')
+        for i in range(len(text_list) - 1): text_list.insert(i * 2 + 1, ' ')
+    return text_list
+
+def fit(text : str, charmap : dict, textzone_width : int, lines_num : int, newline : str, newpage : str, before_command : str, after_command : str):
+    centense = split_handling(text, before_command, after_command, True)
+    x, y, fit.newtext = 0, 0, ''
+    fit.textzone_width, fit.lines_num, fit.newline, fit.newpage = textzone_width, lines_num, newline, newpage
+    fit.charmap = charmap
     
-    return new_text
+    for part in range(len(centense)):
+        if not centense[part]: continue
+        if part % 2:
+            centense[part] = before_command + centense[part] + after_command
+            fit.newtext += centense[part]
+            continue
+        
+        words_list = split_handling(centense[part], before_command, after_command, False)
+
+        for word in words_list:
+            word_width = width(word)
+            if x + word_width > fit.textzone_width and not word_width > fit.textzone_width:
+                x, y = word_width, increase_y(y)
+                fit.newtext += word
+            elif x + word_width > fit.textzone_width:
+                for char in word:
+                    if check(char): continue
+                    x, y = handle_xy(x, y, char)
+                    fit.newtext += char
+            else:
+                x += word_width
+                fit.newtext += word
+
+    return fit.newtext
+
+#print(fit_in_box('AAAAAAAA AA[AA A] AAAAAA AAA', charmap, 21, 4, '\n', '\p', '[', ']'))
