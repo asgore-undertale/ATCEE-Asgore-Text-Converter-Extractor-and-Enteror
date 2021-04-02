@@ -9,32 +9,24 @@ def increase_y(y : int):
         return y + 1
 
 def handle_xy(x : int, y : int, char : str):
-    if x + fit.charmap[char] > fit.textzone_width:
-        x = fit.charmap[char]
+    if x + fit.charmap[char][3] > fit.textzone_width:
+        x = fit.charmap[char][3]
         y = increase_y(y)
-    else:
-        x += fit.charmap[char]
+    else: x += fit.charmap[char][3]
     return x, y
 
 def check(char : str):
-    if char == fit.newline:
-        fit.newtext += fit.newline
-        x, y = 0, increase_y(y)
-    elif char == fit.newpage:
-        fit.newtext += fit.newpage
-        x, y = 0, 0
     if char not in fit.charmap:
-        print(f'{char} not in fit.charmap.')
+        print(f'{char} not in charmap.')
         return True
-    if fit.charmap[char] > fit.textzone_width:
+    if fit.charmap[char][3] > fit.textzone_width:
         print(f'{char} is wider than Textzone.')
         return True
 
-def width(text : str):
-    width = 0
+def width(text : str, width = 0):
     for char in text:
         if check(char): continue
-        width += fit.charmap[char]
+        width += fit.charmap[char][2]
     return width
 
 def split_handling(text : str, before_command : str, after_command : str, case : bool):
@@ -52,19 +44,20 @@ def split_handling(text : str, before_command : str, after_command : str, case :
     return text_list
 
 def fit(text : str, charmap : dict, textzone_width : int, lines_num : int, newline : str, newpage : str, before_command : str, after_command : str):
-    centense = split_handling(text, before_command, after_command, True)
+    sentence = split_handling(text, before_command, after_command, True)
     x, y, fit.newtext = 0, 0, ''
     fit.textzone_width, fit.lines_num, fit.newline, fit.newpage = textzone_width, lines_num, newline, newpage
     fit.charmap = charmap
     
-    for part in range(len(centense)):
-        if not centense[part]: continue
+    for part in range(len(sentence)):
+        if not sentence[part]: continue
         if part % 2:
-            centense[part] = before_command + centense[part] + after_command
-            fit.newtext += centense[part]
+            sentence[part] = before_command + sentence[part] + after_command
+            if sentence[part] == newline: x, y = 0, increase_y(y)
+            if sentence[part] == newpage: x, y = 0, 0
             continue
         
-        words_list = split_handling(centense[part], before_command, after_command, False)
+        words_list = split_handling(sentence[part], before_command, after_command, False)
 
         for word in words_list:
             word_width = width(word)
@@ -79,7 +72,4 @@ def fit(text : str, charmap : dict, textzone_width : int, lines_num : int, newli
             else:
                 x += word_width
                 fit.newtext += word
-
     return fit.newtext
-
-#print(fit_in_box('AAAAAAAA AA[AA A] AAAAAA AAA', charmap, 21, 4, '\n', '\p', '[', ']'))
