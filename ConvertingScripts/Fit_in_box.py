@@ -9,24 +9,24 @@ def increase_y(y : int):
         return y + 1
 
 def handle_xy(x : int, y : int, char : str):
-    if x + fit.charmap[char][3] > fit.textzone_width:
-        x = fit.charmap[char][3]
+    if x + fit.charmap[char] > fit.textzone_width:
+        x = fit.charmap[char]
         y = increase_y(y)
-    else: x += fit.charmap[char][3]
+    else: x += fit.charmap[char]
     return x, y
 
 def check(char : str):
     if char not in fit.charmap:
         print(f'{char} not in charmap.')
         return True
-    if fit.charmap[char][3] > fit.textzone_width:
+    if fit.charmap[char] > fit.textzone_width:
         print(f'{char} is wider than Textzone.')
         return True
 
 def width(text : str, width = 0):
     for char in text:
         if check(char): continue
-        width += fit.charmap[char][2]
+        width += fit.charmap[char]
     return width
 
 def split_handling(text : str, before_command : str, after_command : str, case : bool):
