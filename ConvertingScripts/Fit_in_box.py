@@ -53,8 +53,11 @@ def fit(text : str, charmap : dict, textzone_width : int, lines_num : int, newli
         if not sentence[part]: continue
         if part % 2:
             sentence[part] = before_command + sentence[part] + after_command
-            if sentence[part] == newpage: x, y = 0, 0
+            if sentence[part] == newpage:
+                x, y = 0, 0
+                fit.newtext += sentence[part]
             elif sentence[part] == newline: x, y = 0, increase_y(y)
+            else: fit.newtext += sentence[part]
             continue
         
         words_list = split_handling(sentence[part], before_command, after_command, False)
